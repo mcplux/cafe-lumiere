@@ -10,7 +10,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="bg-gray-200 rounded p-3 flex flex-col sm:flex-row gap-3">
+  <div class="rounded p-3 flex flex-col sm:flex-row gap-3">
     <div class="w-full sm:w-1/2 h-64 overflow-hidden">
       <img
         src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=1769&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"

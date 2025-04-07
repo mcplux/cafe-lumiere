@@ -13,7 +13,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="text-4xl text-center font-bold uppercase">Menu</h1>
+  <h1 class="text-3xl text-center font-bold">Menu</h1>
 
   <MenuList :menuItems="menuItems" />
 </template>
