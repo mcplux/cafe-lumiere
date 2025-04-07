@@ -7,7 +7,7 @@
     <RouterView />
   </main>
 
-  <footer class="text-center text-gray-400 text-sm mt-10">
+  <footer class="text-center text-gray-400 text-sm mt-10 mb-5">
     &copy; Cafe Lumiere. All rights reserved {{ new Date().getFullYear() }}
   </footer>
 </template>
