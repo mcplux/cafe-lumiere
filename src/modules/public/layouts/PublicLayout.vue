@@ -1,18 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import AppHeader from '@/modules/common/components/AppHeader.vue'
+</script>
 
 <template>
-  <header class="sticky top-0">
-    <div class="bg-amber-500 text-white px-5 py-7 flex items-center justify-between shadow-lg">
-      <RouterLink class="text-3xl md:text-4xl font-bold text-gray-50" :to="'/'"
-        >Café Lumière</RouterLink
-      >
-
-      <div class="flex gap-5">
-        <RouterLink :to="'/'" class="text-white md:text-lg">Home</RouterLink>
-        <RouterLink :to="{ name: 'public-menu' }" class="text-white md:text-lg">Menu</RouterLink>
-      </div>
-    </div>
-  </header>
+  <AppHeader />
 
   <main class="max-w-4xl mx-auto mt-5 md:mt-10">
     <RouterView />
