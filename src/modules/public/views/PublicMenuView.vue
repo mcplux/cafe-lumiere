@@ -15,5 +15,6 @@ onMounted(async () => {
 <template>
   <h1 class="text-3xl text-center font-bold">Menu</h1>
 
-  <MenuList :menuItems="menuItems" />
+  <p class="text-lg text-center mt-10 text-gray-700" v-if="menuItems.length === 0">Menu is empty</p>
+  <MenuList v-else :menuItems="menuItems" />
 </template>
