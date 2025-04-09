@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { formatCurrency } from '@/modules/common/helpers'
-import type { MenuItem } from '../interfaces/menu-item.interface'
+import type { MenuItem } from '../interfaces'
 
 interface Props {
   menuItem: MenuItem
