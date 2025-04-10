@@ -7,11 +7,10 @@ export const formKitConfig: DefaultConfigOptions = {
       global: {
         label: 'block text-lg font-bold',
         input: 'w-full p-1 text-gray-700 rounded',
-        message: 'bg-red-400 mt-2 p-1 mx-2 rounded',
+        message: 'bg-red-400 mt-2 p-1 rounded text-center',
       },
       form: {
         form: 'space-y-2 mt-2',
-        message: 'mx-0',
         submit: 'bg-gray-200',
       },
       submit: {

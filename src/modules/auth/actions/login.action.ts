@@ -1,10 +1,12 @@
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { LoginResponse } from '../interfaces'
+import type { LoginResponse, User } from '../interfaces'
+import { isAxiosError } from 'axios'
 
 type LoginActionResponse =
   | {
       ok: true
       token: string
+      user: User
     }
   | {
       ok: false
@@ -18,9 +20,13 @@ export const loginAction = async (
   try {
     const { data } = await cafeLumiereApi.post<LoginResponse>('/auth/login', { email, password })
 
-    return { ok: true, token: data.token }
+    return { ok: true, token: data.token, user: data.user }
   } catch (error) {
+    if (isAxiosError(error) && error.status === 401) {
+      return { ok: false, message: 'Invalid Credentials' }
+    }
+
     console.error(error)
-    return { ok: false, message: 'Invalid Credentials' }
+    throw new Error('Something went wrong')
   }
 }
