@@ -1,7 +1,7 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 
-import { loginAction } from '../actions'
+import { checkAuthStatusAction, loginAction } from '../actions'
 import { AuthStatus, type User } from '../interfaces'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -39,6 +39,34 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const checkAuthStatus = async (): Promise<boolean> => {
+    authStatus.value = AuthStatus.CHECKING
+
+    try {
+      const response = await checkAuthStatusAction()
+
+      if (!response.ok) {
+        return logout()
+      }
+
+      authStatus.value = AuthStatus.AUTHENTICATED
+      user.value = response.user
+
+      return true
+    } catch {
+      return logout()
+    }
+  }
+
+  const logout = (): false => {
+    user.value = null
+    authStatus.value = AuthStatus.UNAUTHENTICATED
+    token.value = ''
+    localStorage.removeItem('token')
+
+    return false
+  }
+
   onMounted(() => {
     const localStorageToken = localStorage.getItem('token')
 
@@ -50,8 +78,10 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   return {
-    login,
     authError,
-    isWaiter: computed(() => user.value?.roles.includes('waiter') ?? false),
+    login,
+    checkAuthStatus,
+    isAuthenticated: computed(() => authStatus.value === AuthStatus.AUTHENTICATED),
+    isWaiter: computed(() => user.value?.roles?.includes('waiter') ?? false),
   }
 })
