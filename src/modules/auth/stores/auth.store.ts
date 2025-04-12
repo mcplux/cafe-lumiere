@@ -82,6 +82,7 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     checkAuthStatus,
     isAuthenticated: computed(() => authStatus.value === AuthStatus.AUTHENTICATED),
+    isAdmin: computed(() => user.value?.roles?.includes('admin') ?? false),
     isWaiter: computed(() => user.value?.roles?.includes('waiter') ?? false),
   }
 })

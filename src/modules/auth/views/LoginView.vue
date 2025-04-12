@@ -18,6 +18,10 @@ const submitHandler = async ({ email, password }: FormData) => {
   if (response && authStore.isWaiter) {
     router.replace({ name: 'waiter' })
   }
+
+  if (response && authStore.isAdmin) {
+    router.replace({ name: 'admin' })
+  }
 }
 </script>
 
