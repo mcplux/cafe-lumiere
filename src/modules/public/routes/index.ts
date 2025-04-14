@@ -15,7 +15,7 @@ export const publicRoutes: RouteRecordRaw = {
     {
       path: 'menu',
       name: 'public-menu',
-      component: () => import('../views/PublicMenuView.vue'),
+      component: () => import('@/modules/common/views/MenuView.vue'),
     },
   ],
 }

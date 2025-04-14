@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
-const routes = [
-  { to: { name: 'home' }, title: 'Home' },
-  { to: { name: 'public-menu' }, title: 'Menu' },
-]
+interface Props {
+  routes: {
+    to: { name: string }
+    title: string
+  }[]
+}
+
+defineProps<Props>()
 
 const router = useRouter()
 </script>

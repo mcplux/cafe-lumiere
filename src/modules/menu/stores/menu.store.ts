@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import { getMenuItemsAction } from '../actions/get-menu-items.action'
@@ -26,5 +26,8 @@ export const useMenuStore = defineStore('menu', () => {
   return {
     menuItems,
     menuStatus,
+    isSuccess: computed(() => menuStatus.value === MenuStatus.SUCCESS),
+    isLoading: computed(() => menuStatus.value === MenuStatus.LOADING),
+    isError: computed(() => menuStatus.value === MenuStatus.ERROR),
   }
 })
