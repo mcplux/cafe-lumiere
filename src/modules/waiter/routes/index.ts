@@ -2,6 +2,8 @@ import type { RouteRecordRaw } from 'vue-router'
 
 import { isWaiterGuard } from '../guards/is-waiter.guard'
 import WaiterLayout from '../layouts/WaiterLayout.vue'
+import WaiterOrdersLayout from '../layouts/WaiterOrdersLayout.vue'
+import WaiterOrdersView from '../views/WaiterOrdersView.vue'
 
 export const waiterRoutes: RouteRecordRaw = {
   path: '/waiter',
@@ -12,8 +14,14 @@ export const waiterRoutes: RouteRecordRaw = {
   children: [
     {
       path: 'orders',
-      name: 'waiter-orders',
-      component: import('../views/WaiterOrdersView.vue'),
+      component: WaiterOrdersLayout,
+      children: [
+        {
+          path: '',
+          name: 'waiter-orders',
+          component: WaiterOrdersView,
+        },
+      ],
     },
     {
       path: 'menu',
