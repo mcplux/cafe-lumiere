@@ -11,7 +11,7 @@ const routes = [
 <template>
   <AppHeader :routes="routes" />
 
-  <main class="max-w-4xl mx-auto mt-5 md:mt-10">
+  <main class="max-w-4xl mx-auto mt-5 md:mt-10 px-2">
     <RouterView />
   </main>
 
