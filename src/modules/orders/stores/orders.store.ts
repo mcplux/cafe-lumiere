@@ -2,30 +2,23 @@ import { onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
-import type { OrderResponse } from '../interfaces/order.response'
 import type { MenuItem } from '@/modules/menu/interfaces'
-
-interface OrderItem {
-  menuItem: MenuItem
-  quantity: number
-}
+import type { OrderItem, OrderResponse } from '../interfaces'
 
 export const useOrdersStore = defineStore('orders', () => {
   const orders = ref<OrderResponse[]>([])
   const orderItems = ref<OrderItem[]>([])
 
-  const addOrderItem = (menuItem: MenuItem) => {
-    const orderItem = orderItems.value.find((item) => item.menuItem.id === menuItem.id)
+  const addOrderItem = (menuItemId: MenuItem['id']) => {
+    const orderItem = orderItems.value.find((item) => item.menuItemId === menuItemId)
 
     if (orderItem) {
       orderItems.value = orderItems.value.map((item) => {
-        return item.menuItem.id === menuItem.id ? { ...item, quantity: item.quantity + 1 } : item
+        return item.menuItemId === menuItemId ? { ...item, quantity: item.quantity + 1 } : item
       })
     } else {
-      orderItems.value.push({ menuItem, quantity: 1 })
+      orderItems.value.push({ menuItemId, quantity: 1 })
     }
-
-    console.log(orderItems.value)
   }
 
   const getTodayOrders = async () => {
