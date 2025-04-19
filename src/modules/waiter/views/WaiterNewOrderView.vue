@@ -14,11 +14,18 @@ const ordersStore = useOrdersStore()
   <div class="mt-10">
     <h2 class="text-xl font-bold">Order Preview</h2>
 
-    <div class="flex flex-col gap-3 mt-5">
+    <p v-if="ordersStore.isEmptyOrder" class="text-gray-700 text-lg text-center mt-5">
+      The order is empty
+    </p>
+
+    <div class="flex flex-col gap-3 mt-5" v-else>
       <OrderItemPreviewCard
         v-for="orderItem in ordersStore.orderItems"
         :key="orderItem.menuItemId"
         :order-item="orderItem"
+        @remove-order-item="ordersStore.removeOrderItem"
+        @increase-quantity="ordersStore.increaseQuantity"
+        @decrease-quantity="ordersStore.decreaseQuantity"
       />
     </div>
   </div>

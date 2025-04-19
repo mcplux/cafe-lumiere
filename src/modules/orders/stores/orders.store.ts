@@ -1,4 +1,4 @@
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
@@ -13,12 +13,34 @@ export const useOrdersStore = defineStore('orders', () => {
     const orderItem = orderItems.value.find((item) => item.menuItemId === menuItemId)
 
     if (orderItem) {
-      orderItems.value = orderItems.value.map((item) => {
-        return item.menuItemId === menuItemId ? { ...item, quantity: item.quantity + 1 } : item
-      })
+      increaseQuantity(menuItemId)
     } else {
       orderItems.value.push({ menuItemId, quantity: 1 })
     }
+  }
+
+  const removeOrderItem = (menuItemId: MenuItem['id']) => {
+    orderItems.value = orderItems.value.filter((item) => item.menuItemId !== menuItemId)
+  }
+
+  const increaseQuantity = (menuItemId: MenuItem['id']) => {
+    orderItems.value = orderItems.value.map((item) => {
+      return item.menuItemId === menuItemId ? { ...item, quantity: item.quantity + 1 } : item
+    })
+  }
+
+  const decreaseQuantity = (menuItemId: MenuItem['id']) => {
+    const orderItem = orderItems.value.find((item) => item.menuItemId === menuItemId)
+
+    if (!orderItem) return
+
+    if (orderItem.quantity <= 1) {
+      return removeOrderItem(menuItemId)
+    }
+
+    orderItems.value = orderItems.value.map((item) => {
+      return item.menuItemId === menuItemId ? { ...item, quantity: item.quantity - 1 } : item
+    })
   }
 
   const getTodayOrders = async () => {
@@ -38,5 +60,9 @@ export const useOrdersStore = defineStore('orders', () => {
     orders,
     orderItems,
     addOrderItem,
+    removeOrderItem,
+    increaseQuantity,
+    decreaseQuantity,
+    isEmptyOrder: computed(() => orderItems.value.length === 0),
   }
 })

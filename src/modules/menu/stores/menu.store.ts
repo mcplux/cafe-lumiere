@@ -1,9 +1,8 @@
 import { computed, onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { getMenuItemsAction } from '../actions/get-menu-items.action'
+import { getMenuItemsAction, getMenuItemAction } from '../actions'
 import { MenuStatus, type MenuItem } from '../interfaces'
-import { getMenuItemAction } from '../actions/get-menu-item.action'
 
 export const useMenuStore = defineStore('menu', () => {
   const menuItems = ref<MenuItem[]>([])

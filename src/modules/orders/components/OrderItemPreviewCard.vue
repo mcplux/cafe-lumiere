@@ -10,6 +10,11 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+defineEmits<{
+  removeOrderItem: [menuItemId: MenuItem['id']]
+  increaseQuantity: [menuItemId: MenuItem['id']]
+  decreaseQuantity: [menuItemId: MenuItem['id']]
+}>()
 
 const menuStore = useMenuStore()
 
@@ -24,7 +29,7 @@ onMounted(async () => {
   <div class="relative border border-gray-200 p-2 flex flex-col sm:flex-row gap-3" v-if="menuItem">
     <button
       class="absolute -right-3 -top-3 bg-red-400 text-white rounded-full p-2"
-      @click="() => console.log('Hello world!')"
+      @click="$emit('removeOrderItem', orderItem.menuItemId)"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -54,8 +59,18 @@ onMounted(async () => {
         >
       </p>
       <div class="flex gap-2">
-        <button class="bg-gray-200 px-2 rounded">-1</button>
-        <button class="bg-gray-200 px-2 rounded">+1</button>
+        <button
+          class="bg-gray-200 px-2 rounded"
+          @click="$emit('decreaseQuantity', orderItem.menuItemId)"
+        >
+          -1
+        </button>
+        <button
+          class="bg-gray-200 px-2 rounded"
+          @click="$emit('increaseQuantity', orderItem.menuItemId)"
+        >
+          +1
+        </button>
       </div>
       <p>
         Total:
