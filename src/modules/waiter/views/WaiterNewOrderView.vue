@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 import { useMenuStore } from '@/modules/menu/stores/menu.store'
+import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 import OrderItemPreviewCard from '@/modules/orders/components/OrderItemPreviewCard.vue'
 import OrderMenuItemCard from '@/modules/orders/components/OrderMenuItemCard.vue'
-import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 
 const menuStore = useMenuStore()
 const ordersStore = useOrdersStore()
+
+onMounted(async () => {
+  await menuStore.getMenuItems()
+})
 </script>
 
 <template>

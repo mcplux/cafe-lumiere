@@ -2,8 +2,13 @@
 import { useMenuStore } from '@/modules/menu/stores/menu.store'
 import MenuList from '@/modules/menu/components/MenuList.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
+import { onMounted } from 'vue'
 
 const menuStore = useMenuStore()
+
+onMounted(async () => {
+  await menuStore.getMenuItems()
+})
 </script>
 
 <template>
