@@ -43,6 +43,7 @@ export const useOrdersStore = defineStore('orders', () => {
     })
   }
 
+  // Database actions
   const getTodayOrders = async () => {
     const now = new Date()
 
