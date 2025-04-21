@@ -2,8 +2,8 @@ import { computed, onMounted, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
-import type { MenuItem } from '@/modules/menu/interfaces'
 import type { OrderItem, OrderResponse } from '../interfaces'
+import type { MenuItem } from '@/modules/menu/interfaces'
 
 export const useOrdersStore = defineStore('orders', () => {
   const orders = ref<OrderResponse[]>([])
