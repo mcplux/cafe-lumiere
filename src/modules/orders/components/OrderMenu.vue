@@ -13,7 +13,7 @@ defineEmits<{
 
 <template>
   <div class="mt-10">
-    <h2 class="text-xl font-bold">Menu</h2>
+    <h2 class="text-2xl font-bold">Menu</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mt-5">
       <OrderMenuItemCard

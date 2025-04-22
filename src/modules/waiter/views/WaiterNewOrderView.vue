@@ -39,8 +39,8 @@ watch(ordersStore, () => {
           <button
             :class="[
               'w-full rounded-lg text-sm font-bold py-2.5',
-              'ring-none focus:outline-none',
-              selected ? 'bg-orange-400 text-white' : 'text-orange-100 hover:bg-orange-200',
+              'ring-none focus:outline-none text-white transition-colors',
+              selected ? 'bg-orange-400' : 'hover:bg-orange-100',
             ]"
           >
             {{ tabName }}
