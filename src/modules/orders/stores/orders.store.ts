@@ -6,9 +6,11 @@ import { getOrdersAction } from '../actions/get-orders.action'
 import type { OrderItem, OrderResponse } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction } from '../actions'
+import { useToast } from 'vue-toastification'
 
 export const useOrdersStore = defineStore('orders', () => {
   const router = useRouter()
+  const toast = useToast()
 
   const orders = ref<OrderResponse[]>([])
   const orderItems = ref<OrderItem[]>([])
@@ -65,9 +67,13 @@ export const useOrdersStore = defineStore('orders', () => {
     }
 
     await createOrderAction(newOrder)
+
     await getTodayOrders()
 
-    router.push({ name: 'waiter-orders' })
+    toast.success('Order created succefully')
+    setTimeout(() => {
+      router.push({ name: 'waiter-orders' })
+    }, 500)
   }
 
   onMounted(() => {

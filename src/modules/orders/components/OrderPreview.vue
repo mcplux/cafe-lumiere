@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
+import { useToast } from 'vue-toastification'
+
 import type { OrderItem } from '../interfaces'
 import OrderItemPreviewCard from './OrderItemPreviewCard.vue'
 import { formatCurrency } from '@/modules/common/helpers'
@@ -19,30 +21,21 @@ const emit = defineEmits<{
   addNewOrder: [client: string, notes: string]
 }>()
 
+const toast = useToast()
+
 const formData = reactive({
   client: '',
   notes: '',
 })
 
-const error = reactive({
-  error: false,
-  msg: '',
-})
-
 const handleNewOrder = () => {
   if (formData.client === '') {
-    Object.assign(error, { error: true, msg: "The client's name is required" })
-    setTimeout(() => {
-      Object.assign(error, { error: false, msg: '' })
-    }, 2000)
+    toast.error("The client's name is required")
     return
   }
 
   if (props.isEmptyOrder) {
-    Object.assign(error, { error: true, msg: 'The order must have at least one item' })
-    setTimeout(() => {
-      Object.assign(error, { error: false, msg: '' })
-    }, 2000)
+    toast.error('The order must have at least one item')
     return
   }
 
@@ -56,12 +49,7 @@ const handleNewOrder = () => {
 
     <div class="mt-5">
       <h3 class="font-bold text-lg">Client Details</h3>
-      <p
-        v-if="error.error"
-        class="text-red-700 bg-red-200 p-2 my-2 rounded border-l-4 border-red-700"
-      >
-        {{ error.msg }}
-      </p>
+
       <div class="mt-2 flex flex-col gap-3 border-b border-gray-200 pb-10">
         <div class="flex flex-col gap-1">
           <label for="name">Client's Name</label>
