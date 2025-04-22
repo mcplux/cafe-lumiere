@@ -1,11 +1,15 @@
 import { computed, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
 import type { OrderItem, OrderResponse } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
+import { createOrderAction } from '../actions'
 
 export const useOrdersStore = defineStore('orders', () => {
+  const router = useRouter()
+
   const orders = ref<OrderResponse[]>([])
   const orderItems = ref<OrderItem[]>([])
 
@@ -53,6 +57,19 @@ export const useOrdersStore = defineStore('orders', () => {
     orders.value = await getOrdersAction(startDate, endDate)
   }
 
+  const addNewOrder = async (client: string, notes: string) => {
+    const newOrder = {
+      client,
+      notes,
+      items: orderItems.value,
+    }
+
+    await createOrderAction(newOrder)
+    await getTodayOrders()
+
+    router.push({ name: 'waiter-orders' })
+  }
+
   onMounted(() => {
     getTodayOrders()
   })
@@ -64,6 +81,7 @@ export const useOrdersStore = defineStore('orders', () => {
     removeOrderItem,
     increaseQuantity,
     decreaseQuantity,
+    addNewOrder,
     isEmptyOrder: computed(() => orderItems.value.length === 0),
   }
 })

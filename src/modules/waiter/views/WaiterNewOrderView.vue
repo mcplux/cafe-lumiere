@@ -61,6 +61,7 @@ watch(ordersStore, () => {
             @remove-order-item="ordersStore.removeOrderItem"
             @increase-quantity="ordersStore.increaseQuantity"
             @decrease-quantity="ordersStore.decreaseQuantity"
+            @add-new-order="ordersStore.addNewOrder"
           />
         </TabPanel>
       </TabPanels>

@@ -1,37 +1,81 @@
 <script setup lang="ts">
+import { reactive } from 'vue'
 import type { OrderItem } from '../interfaces'
 import OrderItemPreviewCard from './OrderItemPreviewCard.vue'
 import { formatCurrency } from '@/modules/common/helpers'
 import type { MenuItem } from '@/modules/menu/interfaces'
 
-defineProps<{
+const props = defineProps<{
   isEmptyOrder: boolean
   orderItems: OrderItem[]
   orderTotal: number
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   removeOrderItem: [menuItemId: MenuItem['id']]
   increaseQuantity: [menuItemId: MenuItem['id']]
   decreaseQuantity: [menuItemId: MenuItem['id']]
+
+  addNewOrder: [client: string, notes: string]
 }>()
+
+const formData = reactive({
+  client: '',
+  notes: '',
+})
+
+const error = reactive({
+  error: false,
+  msg: '',
+})
+
+const handleNewOrder = () => {
+  if (formData.client === '') {
+    Object.assign(error, { error: true, msg: "The client's name is required" })
+    setTimeout(() => {
+      Object.assign(error, { error: false, msg: '' })
+    }, 2000)
+    return
+  }
+
+  if (props.isEmptyOrder) {
+    Object.assign(error, { error: true, msg: 'The order must have at least one item' })
+    setTimeout(() => {
+      Object.assign(error, { error: false, msg: '' })
+    }, 2000)
+    return
+  }
+
+  emit('addNewOrder', formData.client, formData.notes)
+}
 </script>
 
 <template>
-  <div class="mt-10">
+  <form class="mt-10" @submit.prevent="handleNewOrder">
     <h2 class="text-2xl font-bold">Order Preview</h2>
 
     <div class="mt-5">
       <h3 class="font-bold text-lg">Client Details</h3>
+      <p
+        v-if="error.error"
+        class="text-red-700 bg-red-200 p-2 my-2 rounded border-l-4 border-red-700"
+      >
+        {{ error.msg }}
+      </p>
       <div class="mt-2 flex flex-col gap-3 border-b border-gray-200 pb-10">
         <div class="flex flex-col gap-1">
           <label for="name">Client's Name</label>
-          <input type="text" id="name" class="border border-gray-700 rounded p-1" />
+          <input
+            type="text"
+            id="name"
+            class="border border-gray-700 rounded p-1"
+            v-model="formData.client"
+          />
         </div>
 
         <div class="flex flex-col gap-1">
           <label for="name">Aditional Notes</label>
-          <textarea id="name" class="border border-gray-700 rounded p-1" />
+          <textarea id="name" class="border border-gray-700 rounded p-1" v-model="formData.notes" />
         </div>
       </div>
     </div>
@@ -59,7 +103,9 @@ defineEmits<{
       </div>
     </div>
     <div class="mt-5">
-      <button class="text-white bg-orange-400 px-3 py-2 rounded w-full">Add Order</button>
+      <button class="text-white bg-orange-400 px-3 py-2 rounded w-full" type="submit">
+        Add Order
+      </button>
     </div>
-  </div>
+  </form>
 </template>
