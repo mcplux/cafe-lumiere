@@ -23,6 +23,8 @@ export const useOrdersStore = defineStore('orders', () => {
     } else {
       orderItems.value.push({ menuItemId, quantity: 1 })
     }
+
+    toast.success('Item added successfully')
   }
 
   const removeOrderItem = (menuItemId: MenuItem['id']) => {

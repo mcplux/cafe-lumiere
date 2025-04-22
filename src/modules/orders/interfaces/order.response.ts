@@ -7,7 +7,10 @@ export interface OrderResponse {
   createdAt: Date
   updatedAt: Date
   orderItems: OrderItem[]
+  orderStatus: OrderStatus
 }
+
+type OrderStatus = 'pending' | 'completed' | 'paid' | 'cancelled'
 
 interface OrderItem {
   id: string
