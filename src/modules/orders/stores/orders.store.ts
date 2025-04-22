@@ -1,9 +1,9 @@
-import { computed, onMounted, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
-import type { OrderItem, OrderResponse } from '../interfaces'
+import type { OrderItem, OrderResponse, SearchFilters } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction } from '../actions'
 import { useToast } from 'vue-toastification'
@@ -14,6 +14,13 @@ export const useOrdersStore = defineStore('orders', () => {
 
   const orders = ref<OrderResponse[]>([])
   const orderItems = ref<OrderItem[]>([])
+
+  const searchFilters = reactive<SearchFilters>({
+    pending: true,
+    completed: true,
+    paid: true,
+    cancelled: false,
+  })
 
   const addOrderItem = (menuItemId: MenuItem['id']) => {
     const orderItem = orderItems.value.find((item) => item.menuItemId === menuItemId)
@@ -58,7 +65,7 @@ export const useOrdersStore = defineStore('orders', () => {
     const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
 
-    orders.value = await getOrdersAction(startDate, endDate)
+    orders.value = await getOrdersAction(startDate, endDate, searchFilters)
   }
 
   const addNewOrder = async (client: string, notes: string) => {
@@ -70,25 +77,21 @@ export const useOrdersStore = defineStore('orders', () => {
 
     await createOrderAction(newOrder)
 
-    await getTodayOrders()
-
     toast.success('Order created succefully')
     setTimeout(() => {
       router.push({ name: 'waiter-orders' })
     }, 500)
   }
 
-  onMounted(() => {
-    getTodayOrders()
-  })
-
   return {
     orders,
     orderItems,
+    searchFilters,
     addOrderItem,
     removeOrderItem,
     increaseQuantity,
     decreaseQuantity,
+    getTodayOrders,
     addNewOrder,
     isEmptyOrder: computed(() => orderItems.value.length === 0),
   }

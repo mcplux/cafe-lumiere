@@ -19,7 +19,7 @@ const orderStatusColors = {
 
 <template>
   <div
-    class="border border-gray-700 flex flex-col gap-2 rounded p-3 cursor-pointer hover:scale-105 transition-all"
+    class="border border-gray-700 flex flex-col gap-2 rounded p-3 cursor-pointer hover:scale-105 transition-all shadow"
   >
     <p class="text-xs text-gray-700 font-light">{{ order.id.substring(0, 8) }}</p>
     <p class="text-xs uppercase text-center p-1" :class="orderStatusColors[order.orderStatus]">
