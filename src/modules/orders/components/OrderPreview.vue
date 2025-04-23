@@ -10,6 +10,8 @@ defineProps<{
   orderTotal: number
 }>()
 
+const orderStatus = ['pending', 'completed', 'paid', 'cancelled']
+
 const toast = useToast()
 const router = useRouter()
 
@@ -50,9 +52,22 @@ const handleNewOrder = async () => {
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="name">Aditional Notes</label>
+          <label for="order_status">Client's Name</label>
+          <select
+            id="order_status"
+            class="border border-gray-700 rounded p-1 uppercase"
+            v-model="ordersStore.order.orderStatus"
+          >
+            <option v-for="status in orderStatus" :key="status" :value="status">
+              {{ status }}
+            </option>
+          </select>
+        </div>
+
+        <div class="flex flex-col gap-1">
+          <label for="notes">Aditional Notes</label>
           <textarea
-            id="name"
+            id="notes"
             class="border border-gray-700 rounded p-1"
             v-model="ordersStore.order.notes"
           />

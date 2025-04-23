@@ -116,6 +116,7 @@ export const useOrdersStore = defineStore('orders', () => {
     const orderReq = {
       client: order.client,
       notes: order.notes,
+      orderStatus: order.orderStatus,
       items: orderItems.value.map(({ menuItem, quantity }) => ({
         quantity,
         menuItemId: menuItem.id,

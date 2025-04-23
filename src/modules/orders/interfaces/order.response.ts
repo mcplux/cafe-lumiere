@@ -10,7 +10,7 @@ export interface OrderResponse {
   orderStatus: OrderStatus
 }
 
-type OrderStatus = 'pending' | 'completed' | 'paid' | 'cancelled'
+export type OrderStatus = 'pending' | 'completed' | 'paid' | 'cancelled'
 
 export interface OrderItem {
   id: string

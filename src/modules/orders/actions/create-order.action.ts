@@ -1,10 +1,11 @@
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { OrderResponse } from '../interfaces'
+import type { OrderResponse, OrderStatus } from '../interfaces'
 
 interface NewOrder {
   client: string
   notes: string | null
   items: { menuItemId: string; quantity: number }[]
+  orderStatus?: OrderStatus
 }
 
 export const createOrderAction = async (order: NewOrder) => {
