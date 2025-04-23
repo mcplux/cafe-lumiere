@@ -54,15 +54,7 @@ watch(ordersStore, () => {
         </TabPanel>
 
         <TabPanel>
-          <OrderPreview
-            :is-empty-order="ordersStore.isEmptyOrder"
-            :order-items="ordersStore.orderItems"
-            :order-total="orderTotal"
-            @remove-order-item="ordersStore.removeOrderItem"
-            @increase-quantity="ordersStore.increaseQuantity"
-            @decrease-quantity="ordersStore.decreaseQuantity"
-            @add-new-order="ordersStore.addNewOrder"
-          />
+          <OrderPreview :order-total="orderTotal" />
         </TabPanel>
       </TabPanels>
     </TabGroup>

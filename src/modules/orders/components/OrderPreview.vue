@@ -1,45 +1,35 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
 import { useToast } from 'vue-toastification'
 
-import type { OrderItem } from '../interfaces'
 import OrderItemPreviewCard from './OrderItemPreviewCard.vue'
 import { formatCurrency } from '@/modules/common/helpers'
-import type { MenuItem } from '@/modules/menu/interfaces'
+import { useOrdersStore } from '../stores/orders.store'
+import { useRouter } from 'vue-router'
 
-const props = defineProps<{
-  isEmptyOrder: boolean
-  orderItems: Omit<OrderItem, 'id'>[]
+defineProps<{
   orderTotal: number
 }>()
 
-const emit = defineEmits<{
-  removeOrderItem: [menuItemId: MenuItem['id']]
-  increaseQuantity: [menuItemId: MenuItem['id']]
-  decreaseQuantity: [menuItemId: MenuItem['id']]
-
-  addNewOrder: [client: string, notes: string]
-}>()
-
 const toast = useToast()
+const router = useRouter()
 
-const formData = reactive({
-  client: '',
-  notes: '',
-})
+const ordersStore = useOrdersStore()
 
-const handleNewOrder = () => {
-  if (formData.client === '') {
+const handleNewOrder = async () => {
+  if (ordersStore.order.client === '') {
     toast.error("The client's name is required")
     return
   }
 
-  if (props.isEmptyOrder) {
+  if (ordersStore.isEmptyOrder) {
     toast.error('The order must have at least one item')
     return
   }
 
-  emit('addNewOrder', formData.client, formData.notes)
+  await ordersStore.addNewOrder()
+  toast.success('Order created succefully')
+  router.push({ name: 'waiter-orders' })
+  ordersStore.orderItems = []
 }
 </script>
 
@@ -57,13 +47,17 @@ const handleNewOrder = () => {
             type="text"
             id="name"
             class="border border-gray-700 rounded p-1"
-            v-model="formData.client"
+            v-model="ordersStore.order.client"
           />
         </div>
 
         <div class="flex flex-col gap-1">
           <label for="name">Aditional Notes</label>
-          <textarea id="name" class="border border-gray-700 rounded p-1" v-model="formData.notes" />
+          <textarea
+            id="name"
+            class="border border-gray-700 rounded p-1"
+            v-model="ordersStore.order.notes"
+          />
         </div>
       </div>
     </div>
@@ -71,17 +65,19 @@ const handleNewOrder = () => {
     <div class="mt-5">
       <h3 class="font-bold text-lg">Order Items</h3>
 
-      <p v-if="isEmptyOrder" class="text-gray-700 text-lg text-center mt-5">The order is empty</p>
+      <p v-if="ordersStore.isEmptyOrder" class="text-gray-700 text-lg text-center mt-5">
+        The order is empty
+      </p>
 
       <div v-else>
         <div class="flex flex-col gap-3 mt-5">
           <OrderItemPreviewCard
-            v-for="orderItem in orderItems"
+            v-for="orderItem in ordersStore.orderItems"
             :key="orderItem.menuItem.id"
             :order-item="orderItem"
-            @remove-order-item="(menuItemId) => $emit('removeOrderItem', menuItemId)"
-            @increase-quantity="(menuItemId) => $emit('increaseQuantity', menuItemId)"
-            @decrease-quantity="(menuItemId) => $emit('decreaseQuantity', menuItemId)"
+            @remove-order-item="(menuItemId) => ordersStore.removeOrderItem(menuItemId)"
+            @increase-quantity="(menuItemId) => ordersStore.increaseQuantity(menuItemId)"
+            @decrease-quantity="(menuItemId) => ordersStore.decreaseQuantity(menuItemId)"
           />
         </div>
 

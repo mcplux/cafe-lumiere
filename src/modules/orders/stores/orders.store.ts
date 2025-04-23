@@ -1,5 +1,4 @@
 import { computed, reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
@@ -15,10 +14,13 @@ enum OrderReqStatus {
 }
 
 export const useOrdersStore = defineStore('orders', () => {
-  const router = useRouter()
   const toast = useToast()
 
   const orders = ref<OrderResponse[]>([])
+  const order = reactive<Pick<OrderResponse, 'notes' | 'client'>>({
+    notes: '',
+    client: '',
+  })
   const orderItems = ref<Omit<OrderItem, 'id'>[]>([])
 
   const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.LOADING)
@@ -95,12 +97,12 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
-  const addNewOrder = async (client: string, notes: string) => {
+  const addNewOrder = async () => {
     orderReqStatus.value = OrderReqStatus.LOADING
 
     const newOrder = {
-      client,
-      notes,
+      client: order.client,
+      notes: order.notes,
       items: orderItems.value.map(({ menuItem, quantity }) => ({
         quantity,
         menuItemId: menuItem.id,
@@ -109,13 +111,6 @@ export const useOrdersStore = defineStore('orders', () => {
 
     try {
       await createOrderAction(newOrder)
-      orderReqStatus.value = OrderReqStatus.SUCCESS
-
-      toast.success('Order created succefully')
-      setTimeout(() => {
-        router.push({ name: 'waiter-orders' })
-        orderItems.value = []
-      }, 500)
     } catch {
       toast.error('Something went wrong')
 
@@ -125,6 +120,7 @@ export const useOrdersStore = defineStore('orders', () => {
 
   return {
     orders,
+    order,
     orderItems,
     searchFilters,
     addOrderItem,

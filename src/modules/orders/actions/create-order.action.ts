@@ -3,7 +3,7 @@ import type { OrderResponse } from '../interfaces'
 
 interface NewOrder {
   client: string
-  notes: string
+  notes: string | null
   items: { menuItemId: string; quantity: number }[]
 }
 
