@@ -25,11 +25,9 @@ const handleNewOrder = async () => {
     toast.error('The order must have at least one item')
     return
   }
-
-  await ordersStore.addNewOrder()
+  await ordersStore.saveOrder()
   toast.success('Order created succefully')
   router.push({ name: 'waiter-orders' })
-  ordersStore.orderItems = []
 }
 </script>
 
@@ -88,7 +86,7 @@ const handleNewOrder = async () => {
     </div>
     <div class="mt-5">
       <button class="text-white bg-orange-400 px-3 py-2 rounded w-full" type="submit">
-        Add Order
+        Save Order
       </button>
     </div>
   </form>

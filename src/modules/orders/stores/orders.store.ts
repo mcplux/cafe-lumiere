@@ -6,6 +6,7 @@ import { getOrdersAction } from '../actions/get-orders.action'
 import type { OrderItem, OrderResponse, SearchFilters } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction, getOrderAction } from '../actions'
+import { editOrderAction } from '../actions/edit-order.action'
 
 enum OrderReqStatus {
   SUCCESS = 'success',
@@ -13,14 +14,21 @@ enum OrderReqStatus {
   ERROR = 'error',
 }
 
+const initialOrder: OrderResponse = {
+  id: '',
+  notes: '',
+  client: '',
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  orderItems: [],
+  orderStatus: 'pending',
+}
+
 export const useOrdersStore = defineStore('orders', () => {
   const toast = useToast()
 
   const orders = ref<OrderResponse[]>([])
-  const order = reactive<Pick<OrderResponse, 'notes' | 'client'> | OrderResponse>({
-    notes: '',
-    client: '',
-  })
+  const order = reactive<OrderResponse>({ ...initialOrder })
   const orderItems = ref<Omit<OrderItem, 'id'>[]>([])
 
   const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.LOADING)
@@ -31,6 +39,11 @@ export const useOrdersStore = defineStore('orders', () => {
     paid: true,
     cancelled: false,
   })
+
+  const resetState = () => {
+    Object.assign(order, initialOrder)
+    orderItems.value = []
+  }
 
   const addOrderItem = (menuItem: MenuItem) => {
     const orderItem = orderItems.value.find((item) => item.menuItem.id === menuItem.id)
@@ -97,10 +110,10 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
-  const addNewOrder = async () => {
+  const saveOrder = async () => {
     orderReqStatus.value = OrderReqStatus.LOADING
 
-    const newOrder = {
+    const orderReq = {
       client: order.client,
       notes: order.notes,
       items: orderItems.value.map(({ menuItem, quantity }) => ({
@@ -110,7 +123,16 @@ export const useOrdersStore = defineStore('orders', () => {
     }
 
     try {
-      await createOrderAction(newOrder)
+      if (!order.id) {
+        // New order
+        await createOrderAction(orderReq)
+      } else {
+        // Update order
+        await editOrderAction(order.id, orderReq)
+      }
+
+      resetState()
+      orderReqStatus.value = OrderReqStatus.SUCCESS
     } catch {
       toast.error('Something went wrong')
 
@@ -123,13 +145,14 @@ export const useOrdersStore = defineStore('orders', () => {
     order,
     orderItems,
     searchFilters,
+    resetState,
     addOrderItem,
     removeOrderItem,
     increaseQuantity,
     decreaseQuantity,
     getTodayOrders,
     getOrder,
-    addNewOrder,
+    saveOrder,
     isEmptyOrder: computed(() => orderItems.value.length === 0),
     isLoading: computed(() => orderReqStatus.value === OrderReqStatus.LOADING),
     isError: computed(() => orderReqStatus.value === OrderReqStatus.ERROR),

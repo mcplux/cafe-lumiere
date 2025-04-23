@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 import { useMenuStore } from '@/modules/menu/stores/menu.store'
 import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 import OrderMenu from '@/modules/orders/components/OrderMenu.vue'
 import OrderPreview from '@/modules/orders/components/OrderPreview.vue'
+
+const route = useRoute()
+const id = route.params.id as string
 
 const menuStore = useMenuStore()
 const ordersStore = useOrdersStore()
@@ -16,6 +20,11 @@ const orderTotal = ref(0)
 
 onMounted(async () => {
   await menuStore.getMenuItems()
+  const order = await ordersStore.getOrder(id)
+  if (order) {
+    Object.assign(ordersStore.order, order)
+    ordersStore.orderItems = order.orderItems
+  }
 })
 
 onUnmounted(() => {
@@ -30,7 +39,7 @@ watch(ordersStore, () => {
 </script>
 
 <template>
-  <h1 class="text-3xl text-center font-bold">New Order</h1>
+  <h1 class="text-3xl text-center font-bold">Edit Order</h1>
 
   <div class="w-full mt-10">
     <TabGroup>

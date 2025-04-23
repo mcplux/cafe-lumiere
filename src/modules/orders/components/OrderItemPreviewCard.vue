@@ -53,21 +53,23 @@ defineEmits<{
         <button
           class="bg-gray-200 px-2 rounded"
           @click="$emit('decreaseQuantity', orderItem.menuItem.id)"
+          type="button"
         >
           -1
         </button>
         <button
           class="bg-gray-200 px-2 rounded"
           @click="$emit('increaseQuantity', orderItem.menuItem.id)"
+          type="button"
         >
           +1
         </button>
       </div>
       <p>
         Total:
-        <span class="font-bold">{{
-          formatCurrency(orderItem.menuItem.price * orderItem.quantity)
-        }}</span>
+        <span class="font-bold">
+          {{ formatCurrency(orderItem.menuItem.price * orderItem.quantity) }}
+        </span>
       </p>
     </div>
   </div>

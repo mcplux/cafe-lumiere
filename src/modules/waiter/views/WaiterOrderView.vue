@@ -87,8 +87,11 @@ onMounted(async () => {
 
     <div class="mt-5 flex gap-3">
       <button class="w-full p-2 text-white bg-red-600 rounded">Cancel Order</button>
-      <button class="w-full p-2 text-white bg-green-600 rounded">Mark as Completed</button>
-      <button class="w-full p-2 text-white bg-gray-600 rounded">Edit Order</button>
+      <RouterLink
+        :to="{ name: 'waiter-edit-order', params: { id: order.id } }"
+        class="w-full p-2 text-white bg-gray-600 rounded text-center"
+        >Edit Order</RouterLink
+      >
     </div>
   </div>
 </template>
