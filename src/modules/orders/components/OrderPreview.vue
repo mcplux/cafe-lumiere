@@ -9,7 +9,7 @@ import type { MenuItem } from '@/modules/menu/interfaces'
 
 const props = defineProps<{
   isEmptyOrder: boolean
-  orderItems: OrderItem[]
+  orderItems: Omit<OrderItem, 'id'>[]
   orderTotal: number
 }>()
 
@@ -77,7 +77,7 @@ const handleNewOrder = () => {
         <div class="flex flex-col gap-3 mt-5">
           <OrderItemPreviewCard
             v-for="orderItem in orderItems"
-            :key="orderItem.menuItemId"
+            :key="orderItem.menuItem.id"
             :order-item="orderItem"
             @remove-order-item="(menuItemId) => $emit('removeOrderItem', menuItemId)"
             @increase-quantity="(menuItemId) => $emit('increaseQuantity', menuItemId)"

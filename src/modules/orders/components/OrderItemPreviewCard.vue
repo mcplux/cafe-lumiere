@@ -1,35 +1,26 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
 import type { OrderItem } from '../interfaces'
-import { useMenuStore } from '@/modules/menu/stores/menu.store'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { formatCurrency } from '@/modules/common/helpers'
 
 interface Props {
-  orderItem: OrderItem
+  orderItem: Omit<OrderItem, 'id'>
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
+
 defineEmits<{
   removeOrderItem: [menuItemId: MenuItem['id']]
   increaseQuantity: [menuItemId: MenuItem['id']]
   decreaseQuantity: [menuItemId: MenuItem['id']]
 }>()
-
-const menuStore = useMenuStore()
-
-const menuItem = ref<MenuItem | null>(null)
-
-onMounted(async () => {
-  menuItem.value = await menuStore.getMenuItem(props.orderItem.menuItemId)
-})
 </script>
 
 <template>
-  <div class="relative border border-gray-200 p-2 flex flex-col sm:flex-row gap-3" v-if="menuItem">
+  <div class="relative border border-gray-200 p-2 flex flex-col sm:flex-row gap-3">
     <button
       class="absolute -right-3 -top-3 bg-red-400 text-white rounded-full p-2"
-      @click="$emit('removeOrderItem', orderItem.menuItemId)"
+      @click="$emit('removeOrderItem', orderItem.menuItem.id)"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -51,30 +42,32 @@ onMounted(async () => {
     </div>
 
     <div>
-      <p class="font-bold text-lg">{{ menuItem.name }}</p>
+      <p class="font-bold text-lg">{{ orderItem.menuItem.name }}</p>
       <p>
         Price:
         <span class="font-bold"
-          >{{ formatCurrency(menuItem.price) }} x {{ orderItem.quantity }}</span
+          >{{ formatCurrency(orderItem.menuItem.price) }} x {{ orderItem.quantity }}</span
         >
       </p>
       <div class="flex gap-2">
         <button
           class="bg-gray-200 px-2 rounded"
-          @click="$emit('decreaseQuantity', orderItem.menuItemId)"
+          @click="$emit('decreaseQuantity', orderItem.menuItem.id)"
         >
           -1
         </button>
         <button
           class="bg-gray-200 px-2 rounded"
-          @click="$emit('increaseQuantity', orderItem.menuItemId)"
+          @click="$emit('increaseQuantity', orderItem.menuItem.id)"
         >
           +1
         </button>
       </div>
       <p>
         Total:
-        <span class="font-bold">{{ formatCurrency(menuItem.price * orderItem.quantity) }}</span>
+        <span class="font-bold">{{
+          formatCurrency(orderItem.menuItem.price * orderItem.quantity)
+        }}</span>
       </p>
     </div>
   </div>

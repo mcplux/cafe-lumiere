@@ -7,7 +7,7 @@ defineProps<{
 }>()
 
 defineEmits<{
-  addOrderItem: [menuItemId: MenuItem['id']]
+  addOrderItem: [menuItem: MenuItem]
 }>()
 </script>
 
@@ -15,7 +15,7 @@ defineEmits<{
   <div class="relative border border-gray-200 p-2">
     <button
       class="absolute -right-3 -top-3 bg-orange-400 text-white rounded-full p-2"
-      @click="$emit('addOrderItem', menuItem.id)"
+      @click="$emit('addOrderItem', menuItem)"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

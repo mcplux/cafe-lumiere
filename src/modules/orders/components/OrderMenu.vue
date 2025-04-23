@@ -7,7 +7,7 @@ defineProps<{
 }>()
 
 defineEmits<{
-  addOrderItem: [menuItemId: MenuItem['id']]
+  addOrderItem: [menuItem: MenuItem]
 }>()
 </script>
 
@@ -20,7 +20,7 @@ defineEmits<{
         v-for="menuItem in menuItems"
         :key="menuItem.id"
         :menu-item="menuItem"
-        @add-order-item="(menuItemId) => $emit('addOrderItem', menuItemId)"
+        @add-order-item="(menuItem) => $emit('addOrderItem', menuItem)"
       />
     </div>
   </div>

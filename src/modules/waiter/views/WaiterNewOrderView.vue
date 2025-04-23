@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 import { useMenuStore } from '@/modules/menu/stores/menu.store'
@@ -18,13 +18,13 @@ onMounted(async () => {
   await menuStore.getMenuItems()
 })
 
+onUnmounted(() => {
+  ordersStore.orderItems = []
+})
+
 watch(ordersStore, () => {
   orderTotal.value = ordersStore.orderItems.reduce((total, orderItem) => {
-    const menuItem = menuStore.menuItems.find((item) => item.id === orderItem.menuItemId)
-
-    if (!menuItem) return total
-
-    return orderItem.quantity * menuItem.price + total
+    return orderItem.quantity * orderItem.menuItem.price + total
   }, 0)
 })
 </script>

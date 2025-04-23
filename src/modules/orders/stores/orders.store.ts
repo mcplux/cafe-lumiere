@@ -19,7 +19,7 @@ export const useOrdersStore = defineStore('orders', () => {
   const toast = useToast()
 
   const orders = ref<OrderResponse[]>([])
-  const orderItems = ref<OrderItem[]>([])
+  const orderItems = ref<Omit<OrderItem, 'id'>[]>([])
 
   const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.LOADING)
 
@@ -30,30 +30,30 @@ export const useOrdersStore = defineStore('orders', () => {
     cancelled: false,
   })
 
-  const addOrderItem = (menuItemId: MenuItem['id']) => {
-    const orderItem = orderItems.value.find((item) => item.menuItemId === menuItemId)
+  const addOrderItem = (menuItem: MenuItem) => {
+    const orderItem = orderItems.value.find((item) => item.menuItem.id === menuItem.id)
 
     if (orderItem) {
-      increaseQuantity(menuItemId)
+      increaseQuantity(menuItem.id)
     } else {
-      orderItems.value.push({ menuItemId, quantity: 1 })
+      orderItems.value.push({ menuItem, quantity: 1 })
     }
 
     toast.success('Item added successfully')
   }
 
   const removeOrderItem = (menuItemId: MenuItem['id']) => {
-    orderItems.value = orderItems.value.filter((item) => item.menuItemId !== menuItemId)
+    orderItems.value = orderItems.value.filter((item) => item.menuItem.id !== menuItemId)
   }
 
   const increaseQuantity = (menuItemId: MenuItem['id']) => {
     orderItems.value = orderItems.value.map((item) => {
-      return item.menuItemId === menuItemId ? { ...item, quantity: item.quantity + 1 } : item
+      return item.menuItem.id === menuItemId ? { ...item, quantity: item.quantity + 1 } : item
     })
   }
 
   const decreaseQuantity = (menuItemId: MenuItem['id']) => {
-    const orderItem = orderItems.value.find((item) => item.menuItemId === menuItemId)
+    const orderItem = orderItems.value.find((item) => item.menuItem.id === menuItemId)
 
     if (!orderItem) return
 
@@ -62,7 +62,7 @@ export const useOrdersStore = defineStore('orders', () => {
     }
 
     orderItems.value = orderItems.value.map((item) => {
-      return item.menuItemId === menuItemId ? { ...item, quantity: item.quantity - 1 } : item
+      return item.menuItem.id === menuItemId ? { ...item, quantity: item.quantity - 1 } : item
     })
   }
 
@@ -101,7 +101,10 @@ export const useOrdersStore = defineStore('orders', () => {
     const newOrder = {
       client,
       notes,
-      items: orderItems.value,
+      items: orderItems.value.map(({ menuItem, quantity }) => ({
+        quantity,
+        menuItemId: menuItem.id,
+      })),
     }
 
     try {
@@ -111,6 +114,7 @@ export const useOrdersStore = defineStore('orders', () => {
       toast.success('Order created succefully')
       setTimeout(() => {
         router.push({ name: 'waiter-orders' })
+        orderItems.value = []
       }, 500)
     } catch {
       toast.error('Something went wrong')

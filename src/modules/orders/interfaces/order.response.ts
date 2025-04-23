@@ -12,7 +12,7 @@ export interface OrderResponse {
 
 type OrderStatus = 'pending' | 'completed' | 'paid' | 'cancelled'
 
-interface OrderItem {
+export interface OrderItem {
   id: string
   menuItem: MenuItem
   quantity: number
