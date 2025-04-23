@@ -18,7 +18,8 @@ const orderStatusColors = {
 </script>
 
 <template>
-  <div
+  <RouterLink
+    :to="{ name: 'waiter-order', params: { id: order.id } }"
     class="border border-gray-700 flex flex-col gap-2 rounded p-3 cursor-pointer hover:scale-105 transition-all shadow"
   >
     <p class="text-xs text-gray-700 font-light">{{ order.id.substring(0, 8) }}</p>
@@ -28,5 +29,5 @@ const orderStatusColors = {
     <p class="text-sm text-gray-700">{{ formatDate(order.createdAt) }}</p>
     <p class="uppercase font-bold">{{ order.client }}</p>
     <p class="text-lg font-bold">{{ getOrderTotalAmount(order) }}</p>
-  </div>
+  </RouterLink>
 </template>

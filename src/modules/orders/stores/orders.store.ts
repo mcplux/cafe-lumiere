@@ -5,7 +5,7 @@ import { defineStore } from 'pinia'
 import { getOrdersAction } from '../actions/get-orders.action'
 import type { OrderItem, OrderResponse, SearchFilters } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
-import { createOrderAction } from '../actions'
+import { createOrderAction, getOrderAction } from '../actions'
 import { useToast } from 'vue-toastification'
 
 export const useOrdersStore = defineStore('orders', () => {
@@ -68,6 +68,10 @@ export const useOrdersStore = defineStore('orders', () => {
     orders.value = await getOrdersAction(startDate, endDate, searchFilters)
   }
 
+  const getOrder = (id: OrderResponse['id']) => {
+    return getOrderAction(id)
+  }
+
   const addNewOrder = async (client: string, notes: string) => {
     const newOrder = {
       client,
@@ -92,6 +96,7 @@ export const useOrdersStore = defineStore('orders', () => {
     increaseQuantity,
     decreaseQuantity,
     getTodayOrders,
+    getOrder,
     addNewOrder,
     isEmptyOrder: computed(() => orderItems.value.length === 0),
   }
