@@ -8,12 +8,20 @@ import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction, getOrderAction } from '../actions'
 import { useToast } from 'vue-toastification'
 
+enum OrderReqStatus {
+  SUCCESS = 'success',
+  LOADING = 'loading',
+  ERROR = 'error',
+}
+
 export const useOrdersStore = defineStore('orders', () => {
   const router = useRouter()
   const toast = useToast()
 
   const orders = ref<OrderResponse[]>([])
   const orderItems = ref<OrderItem[]>([])
+
+  const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.LOADING)
 
   const searchFilters = reactive<SearchFilters>({
     pending: true,
@@ -60,31 +68,55 @@ export const useOrdersStore = defineStore('orders', () => {
 
   // Database actions
   const getTodayOrders = async () => {
+    orderReqStatus.value = OrderReqStatus.LOADING
+
     const now = new Date()
 
     const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
 
-    orders.value = await getOrdersAction(startDate, endDate, searchFilters)
+    try {
+      orders.value = await getOrdersAction(startDate, endDate, searchFilters)
+      orderReqStatus.value = OrderReqStatus.SUCCESS
+    } catch {
+      orderReqStatus.value = OrderReqStatus.ERROR
+    }
   }
 
-  const getOrder = (id: OrderResponse['id']) => {
-    return getOrderAction(id)
+  const getOrder = async (id: OrderResponse['id']) => {
+    orderReqStatus.value = OrderReqStatus.LOADING
+
+    try {
+      const order = await getOrderAction(id)
+      orderReqStatus.value = OrderReqStatus.SUCCESS
+      return order
+    } catch {
+      orderReqStatus.value = OrderReqStatus.ERROR
+    }
   }
 
   const addNewOrder = async (client: string, notes: string) => {
+    orderReqStatus.value = OrderReqStatus.LOADING
+
     const newOrder = {
       client,
       notes,
       items: orderItems.value,
     }
 
-    await createOrderAction(newOrder)
+    try {
+      await createOrderAction(newOrder)
+      orderReqStatus.value = OrderReqStatus.SUCCESS
 
-    toast.success('Order created succefully')
-    setTimeout(() => {
-      router.push({ name: 'waiter-orders' })
-    }, 500)
+      toast.success('Order created succefully')
+      setTimeout(() => {
+        router.push({ name: 'waiter-orders' })
+      }, 500)
+    } catch {
+      toast.error('Something went wrong')
+
+      orderReqStatus.value = OrderReqStatus.ERROR
+    }
   }
 
   return {
@@ -99,5 +131,8 @@ export const useOrdersStore = defineStore('orders', () => {
     getOrder,
     addNewOrder,
     isEmptyOrder: computed(() => orderItems.value.length === 0),
+    isLoading: computed(() => orderReqStatus.value === OrderReqStatus.LOADING),
+    isError: computed(() => orderReqStatus.value === OrderReqStatus.ERROR),
+    isSuccess: computed(() => orderReqStatus.value === OrderReqStatus.SUCCESS),
   }
 })

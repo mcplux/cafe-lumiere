@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router'
 import type { OrderResponse } from '@/modules/orders/interfaces'
 import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 import { formatCurrency, formatDate, getOrderTotalAmount } from '@/modules/common/helpers'
+import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
 
 const route = useRoute()
 const ordersStore = useOrdersStore()
@@ -13,14 +14,16 @@ const id = route.params.id as string
 const order = ref<OrderResponse | null>(null)
 
 onMounted(async () => {
-  order.value = await ordersStore.getOrder(id)
+  order.value = (await ordersStore.getOrder(id)) ?? null
 })
 </script>
 
 <template>
   <h1 class="text-3xl text-center font-bold">Order - {{ id.substring(0, 8) }}</h1>
 
-  <div v-if="order" class="mt-10">
+  <LoadingSpinner v-if="ordersStore.isLoading" />
+
+  <div v-if="ordersStore.isSuccess && order" class="mt-10">
     <div class="flex flex-col gap-3 border border-gray-700 rounded p-5">
       <p class="text-lg">
         ID: <span class="font-bold">{{ order.id }}</span>

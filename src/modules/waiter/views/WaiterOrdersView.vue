@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
 import OrderList from '@/modules/orders/components/OrderList.vue'
 import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 import { onMounted } from 'vue'
@@ -65,5 +66,13 @@ onMounted(() => {
     </div>
   </div>
 
-  <OrderList :orders="ordersStore.orders" />
+  <LoadingSpinner v-if="ordersStore.isLoading" />
+
+  <div v-else>
+    <p v-if="ordersStore.orders.length === 0" class="text-center mt-10 text-gray-700 text-lg">
+      No orders yet
+    </p>
+
+    <OrderList v-else :orders="ordersStore.orders" />
+  </div>
 </template>
