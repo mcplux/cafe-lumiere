@@ -1,11 +1,11 @@
 import { computed, reactive, ref } from 'vue'
+import { useToast } from 'vue-toastification'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
 import type { OrderItem, OrderResponse, SearchFilters } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction, getOrderAction } from '../actions'
-import { useToast } from 'vue-toastification'
 
 enum OrderReqStatus {
   SUCCESS = 'success',
@@ -17,7 +17,7 @@ export const useOrdersStore = defineStore('orders', () => {
   const toast = useToast()
 
   const orders = ref<OrderResponse[]>([])
-  const order = reactive<Pick<OrderResponse, 'notes' | 'client'>>({
+  const order = reactive<Pick<OrderResponse, 'notes' | 'client'> | OrderResponse>({
     notes: '',
     client: '',
   })
@@ -37,11 +37,11 @@ export const useOrdersStore = defineStore('orders', () => {
 
     if (orderItem) {
       increaseQuantity(menuItem.id)
+      toast.success(`Item added successfully \n ${menuItem.name} x ${orderItem.quantity + 1}`)
     } else {
       orderItems.value.push({ menuItem, quantity: 1 })
+      toast.success(`Item added successfully \n ${menuItem.name} x 1`)
     }
-
-    toast.success('Item added successfully')
   }
 
   const removeOrderItem = (menuItemId: MenuItem['id']) => {
