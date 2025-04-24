@@ -5,7 +5,7 @@ import { defineStore } from 'pinia'
 import { getOrdersAction } from '../actions/get-orders.action'
 import type { OrderItem, OrderResponse, SearchFilters } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
-import { createOrderAction, getOrderAction } from '../actions'
+import { createOrderAction, deleteOrderAction, getOrderAction } from '../actions'
 import { editOrderAction } from '../actions/edit-order.action'
 
 enum OrderReqStatus {
@@ -141,6 +141,19 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
+  const deleteOrder = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this order?')) return
+
+    orderReqStatus.value = OrderReqStatus.LOADING
+    try {
+      await deleteOrderAction(id)
+      orderReqStatus.value = OrderReqStatus.SUCCESS
+    } catch (error) {
+      console.error(error)
+      orderReqStatus.value = OrderReqStatus.ERROR
+    }
+  }
+
   return {
     orders,
     order,
@@ -154,6 +167,7 @@ export const useOrdersStore = defineStore('orders', () => {
     getTodayOrders,
     getOrder,
     saveOrder,
+    deleteOrder,
     isEmptyOrder: computed(() => orderItems.value.length === 0),
     isLoading: computed(() => orderReqStatus.value === OrderReqStatus.LOADING),
     isError: computed(() => orderReqStatus.value === OrderReqStatus.ERROR),

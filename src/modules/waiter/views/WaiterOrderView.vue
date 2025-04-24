@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
 import type { OrderResponse } from '@/modules/orders/interfaces'
 import { useOrdersStore } from '@/modules/orders/stores/orders.store'
@@ -8,10 +9,21 @@ import { formatCurrency, formatDate, getOrderTotalAmount } from '@/modules/commo
 import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
 
 const route = useRoute()
+const router = useRouter()
+const toast = useToast()
+
 const ordersStore = useOrdersStore()
 
 const id = route.params.id as string
 const order = ref<OrderResponse | null>(null)
+
+const handleDelete = async (id: string) => {
+  await ordersStore.deleteOrder(id)
+  if (ordersStore.isSuccess) {
+    toast.success('Order deleted successfully')
+    router.replace({ name: 'waiter-orders' })
+  }
+}
 
 onMounted(async () => {
   order.value = (await ordersStore.getOrder(id)) ?? null
@@ -52,16 +64,12 @@ onMounted(async () => {
       <h3 class="text-lg font-bold">Items:</h3>
 
       <ul class="flex flex-col gap-3">
-        <li
-          v-for="item in order.orderItems"
-          :key="item.id"
-          class="flex flex-col sm:flex-row gap-3 p-5 border-b border-gray-700"
-        >
+        <li v-for="item in order.orderItems" :key="item.id"
+          class="flex flex-col sm:flex-row gap-3 p-5 border-b border-gray-700">
           <div class="w-full sm:w-64 h-40 overflow-hidden">
             <img
               src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=1769&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              class="w-full h-full object-cover object-center"
-            />
+              class="w-full h-full object-cover object-center" />
           </div>
           <div>
             <p class="text-lg font-bold">{{ item.menuItem.name }}</p>
@@ -73,9 +81,9 @@ onMounted(async () => {
             </p>
             <p>
               Subtotal:
-              <span class="font-bold">{{
-                formatCurrency(item.menuItem.price * item.quantity)
-              }}</span>
+              <span class="font-bold">
+                {{ formatCurrency(item.menuItem.price * item.quantity) }}
+              </span>
             </p>
           </div>
         </li>
@@ -86,12 +94,13 @@ onMounted(async () => {
     </div>
 
     <div class="mt-5 flex gap-3">
-      <button class="w-full p-2 text-white bg-red-600 rounded">Cancel Order</button>
-      <RouterLink
-        :to="{ name: 'waiter-edit-order', params: { id: order.id } }"
-        class="w-full p-2 text-white bg-gray-600 rounded text-center"
-        >Edit Order</RouterLink
-      >
+      <button class="w-full p-2 text-white bg-red-600 rounded" @click="() => handleDelete(id)">
+        Cancel Order
+      </button>
+      <RouterLink :to="{ name: 'waiter-edit-order', params: { id: order.id } }"
+        class="w-full p-2 text-white bg-gray-600 rounded text-center">
+        Edit Order
+      </RouterLink>
     </div>
   </div>
 </template>
