@@ -1,4 +1,4 @@
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 
 import { checkAuthStatusAction, loginAction } from '../actions'
@@ -7,7 +7,7 @@ import { AuthStatus, type User } from '../interfaces'
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const authStatus = ref<AuthStatus>(AuthStatus.CHECKING)
-  const token = ref<string>('')
+  const token = ref<string>(localStorage.getItem('token') ?? '')
   const authError = reactive({ error: false, message: '' })
 
   const login = async (email: string, password: string): Promise<boolean> => {
@@ -66,12 +66,6 @@ export const useAuthStore = defineStore('auth', () => {
 
     return false
   }
-
-  onMounted(() => {
-    const localStorageToken = localStorage.getItem('token')
-
-    token.value = localStorageToken ?? ''
-  })
 
   watch(token, () => {
     localStorage.setItem('token', token.value)

@@ -10,7 +10,7 @@ export const publicRoutes: RouteRecordRaw = {
     {
       path: '',
       name: 'home',
-      component: () => HomeView,
+      component: HomeView,
     },
     {
       path: 'menu',

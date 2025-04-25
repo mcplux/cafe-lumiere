@@ -5,5 +5,5 @@ export const adminRoutes: RouteRecordRaw = {
   path: '/admin',
   name: 'admin',
   beforeEnter: [isAdminGuard],
-  component: import('../layouts/AdminLayout.vue'),
+  component: () => import('../layouts/AdminLayout.vue'),
 }

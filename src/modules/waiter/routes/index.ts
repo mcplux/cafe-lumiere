@@ -24,17 +24,17 @@ export const waiterRoutes: RouteRecordRaw = {
         {
           path: 'new',
           name: 'waiter-new-order',
-          component: import('../views/WaiterNewOrderView.vue'),
+          component: () => import('../views/WaiterNewOrderView.vue'),
         },
         {
           path: ':id',
           name: 'waiter-order',
-          component: import('../views/WaiterOrderView.vue'),
+          component: () => import('../views/WaiterOrderView.vue'),
         },
         {
           path: ':id/edit',
           name: 'waiter-edit-order',
-          component: import('../views/WaiterEditOrderView.vue'),
+          component: () => import('../views/WaiterEditOrderView.vue'),
         },
       ],
     },
