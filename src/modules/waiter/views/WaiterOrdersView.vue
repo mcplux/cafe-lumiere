@@ -16,14 +16,14 @@ onMounted(() => {
   <div class="flex justify-end">
     <RouterLink
       :to="{ name: 'waiter-new-order' }"
-      class="bg-orange-500 p-2 rounded text-white font-bold w-full sm:w-auto mt-5"
+      class="bg-orange-500 p-2 rounded text-white font-bold w-full sm:w-auto mt-5 text-center"
     >
       New Order
     </RouterLink>
   </div>
 
   <!-- Filters -->
-  <div>
+  <div class="mt-5">
     <h3 class="font-bold">Order Status:</h3>
     <div class="flex flex-col sm:flex-row justify-between mt-2">
       <div class="flex gap-2 items-center">

@@ -142,8 +142,6 @@ export const useOrdersStore = defineStore('orders', () => {
   }
 
   const deleteOrder = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this order?')) return
-
     orderReqStatus.value = OrderReqStatus.LOADING
     try {
       await deleteOrderAction(id)
