@@ -41,7 +41,7 @@ export const waiterRoutes: RouteRecordRaw = {
     {
       path: 'menu',
       name: 'waiter-menu',
-      component: import('@/modules/common/views/MenuView.vue'),
+      component: () => import('@/modules/common/views/MenuView.vue'),
     },
   ],
 }
