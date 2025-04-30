@@ -1,22 +1,16 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onUnmounted, ref, watch } from 'vue'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
-import { useMenuStore } from '@/modules/menu/stores/menu.store'
 import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 import OrderMenu from '@/modules/orders/components/OrderMenu.vue'
 import OrderPreview from '@/modules/orders/components/OrderPreview.vue'
 
-const menuStore = useMenuStore()
 const ordersStore = useOrdersStore()
 
 const tabNames = ['Menu', 'Preview Order']
 
 const orderTotal = ref(0)
-
-onMounted(async () => {
-  await menuStore.getMenuItems()
-})
 
 onUnmounted(() => {
   ordersStore.resetState()
@@ -50,7 +44,7 @@ watch(ordersStore, () => {
 
       <TabPanels class="mt-2">
         <TabPanel>
-          <OrderMenu :menu-items="menuStore.menuItems" @add-order-item="ordersStore.addOrderItem" />
+          <OrderMenu @add-order-item="ordersStore.addOrderItem" />
         </TabPanel>
 
         <TabPanel>

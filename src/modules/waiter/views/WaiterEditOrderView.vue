@@ -3,7 +3,6 @@ import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
-import { useMenuStore } from '@/modules/menu/stores/menu.store'
 import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 import OrderMenu from '@/modules/orders/components/OrderMenu.vue'
 import OrderPreview from '@/modules/orders/components/OrderPreview.vue'
@@ -11,7 +10,6 @@ import OrderPreview from '@/modules/orders/components/OrderPreview.vue'
 const route = useRoute()
 const id = route.params.id as string
 
-const menuStore = useMenuStore()
 const ordersStore = useOrdersStore()
 
 const tabNames = ['Menu', 'Preview Order']
@@ -19,7 +17,6 @@ const tabNames = ['Menu', 'Preview Order']
 const orderTotal = ref(0)
 
 onMounted(async () => {
-  await menuStore.getMenuItems()
   const order = await ordersStore.getOrder(id)
   if (order) {
     Object.assign(ordersStore.order, order)
@@ -59,7 +56,7 @@ watch(ordersStore, () => {
 
       <TabPanels class="mt-2">
         <TabPanel>
-          <OrderMenu :menu-items="menuStore.menuItems" @add-order-item="ordersStore.addOrderItem" />
+          <OrderMenu @add-order-item="ordersStore.addOrderItem" />
         </TabPanel>
 
         <TabPanel>

@@ -100,8 +100,12 @@ const handleNewOrder = async () => {
       </div>
     </div>
     <div class="mt-5">
-      <button class="text-white bg-orange-400 px-3 py-2 rounded w-full" type="submit">
-        Save Order
+      <button
+        class="text-white bg-orange-400 px-3 py-2 rounded w-full disabled:opacity-50"
+        type="submit"
+        :disabled="ordersStore.isLoading"
+      >
+        {{ ordersStore.isLoading ? 'Loading...' : 'Save Order' }}
       </button>
     </div>
   </form>
