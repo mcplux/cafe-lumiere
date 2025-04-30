@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 import type { OrderResponse } from '@/modules/orders/interfaces'
@@ -34,6 +34,15 @@ onMounted(async () => {
 
 <template>
   <h1 class="text-3xl text-center font-bold">Order - {{ id.substring(0, 8) }}</h1>
+
+  <div class="flex justify-end">
+    <RouterLink
+      :to="{ name: 'waiter-orders' }"
+      class="bg-orange-500 p-2 rounded text-white font-bold w-full sm:w-auto mt-5 text-center"
+    >
+      Back to Orders
+    </RouterLink>
+  </div>
 
   <LoadingSpinner v-if="ordersStore.isLoading" />
 
