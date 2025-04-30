@@ -31,7 +31,7 @@ export const useOrdersStore = defineStore('orders', () => {
   const order = reactive<OrderResponse>({ ...initialOrder })
   const orderItems = ref<Omit<OrderItem, 'id'>[]>([])
 
-  const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.LOADING)
+  const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.SUCCESS)
 
   const searchFilters = reactive<SearchFilters>({
     pending: true,
