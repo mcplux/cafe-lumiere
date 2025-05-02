@@ -2,6 +2,7 @@
 import type { OrderItem } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { formatCurrency } from '@/modules/common/helpers'
+import { XMarkIcon } from '@heroicons/vue/16/solid'
 
 interface Props {
   orderItem: Omit<OrderItem, 'id'>
@@ -22,16 +23,7 @@ defineEmits<{
       class="absolute -right-3 -top-3 bg-red-400 text-white rounded-full p-2"
       @click="$emit('removeOrderItem', orderItem.menuItem.id)"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-      </svg>
+      <XMarkIcon class="size-6" />
     </button>
 
     <div class="w-full sm:w-64 overflow-hidden">
