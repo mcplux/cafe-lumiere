@@ -7,6 +7,8 @@ import type { OrderItem, OrderResponse, SearchFilters } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction, deleteOrderAction, getOrderAction } from '../actions'
 import { editOrderAction } from '../actions/edit-order.action'
+import { useAuthStore } from '@/modules/auth/stores/auth.store'
+import { useRouter } from 'vue-router'
 
 enum OrderReqStatus {
   SUCCESS = 'success',
@@ -25,7 +27,10 @@ const initialOrder: OrderResponse = {
 }
 
 export const useOrdersStore = defineStore('orders', () => {
+  const router = useRouter()
   const toast = useToast()
+
+  const authStore = useAuthStore()
 
   const orders = ref<OrderResponse[]>([])
   const order = reactive<OrderResponse>({ ...initialOrder })
@@ -91,9 +96,22 @@ export const useOrdersStore = defineStore('orders', () => {
     const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
 
     try {
-      orders.value = await getOrdersAction(startDate, endDate, searchFilters)
+      const response = await getOrdersAction(startDate, endDate, searchFilters)
+      if (!response.ok) {
+        toast.error(response.msg)
+        orders.value = []
+        orderReqStatus.value = OrderReqStatus.ERROR
+        router.replace({ name: 'login' })
+        return authStore.logout()
+      }
+
+      orders.value = response.orders
+
       orderReqStatus.value = OrderReqStatus.SUCCESS
-    } catch {
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message)
+      }
       orderReqStatus.value = OrderReqStatus.ERROR
     }
   }

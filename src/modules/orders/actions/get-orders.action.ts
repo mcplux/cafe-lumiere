@@ -4,6 +4,7 @@ import cafeLumiereApi from '@/api/cafe-lumiere.api'
 import type { OrderResponse } from '../interfaces/order.response'
 import { formatLocalISOString } from '@/modules/common/helpers'
 import type { SearchFilters } from '../interfaces'
+import { isAxiosError } from 'axios'
 
 interface QueryParams {
   startDate: string
@@ -11,11 +12,21 @@ interface QueryParams {
   orderStatus: string[]
 }
 
+type GetOrdersResponse =
+  | {
+      ok: true
+      orders: OrderResponse[]
+    }
+  | {
+      ok: false
+      msg: string
+    }
+
 export const getOrdersAction = async (
   startDate: Date,
   endDate: Date,
   searchFilters: SearchFilters,
-) => {
+): Promise<GetOrdersResponse | never> => {
   const params: QueryParams = {
     startDate: formatLocalISOString(startDate),
     endDate: formatLocalISOString(endDate),
@@ -38,10 +49,25 @@ export const getOrdersAction = async (
     params.orderStatus.push('cancelled')
   }
 
-  const { data } = await cafeLumiereApi.get<OrderResponse[]>('/orders', {
-    params,
-    paramsSerializer: () => qs.stringify(params, { arrayFormat: 'repeat' }),
-  })
+  try {
+    const { data } = await cafeLumiereApi.get<OrderResponse[]>('/orders', {
+      params,
+      paramsSerializer: () => qs.stringify(params, { arrayFormat: 'repeat' }),
+    })
 
-  return data
+    return {
+      ok: true,
+      orders: data,
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.status === 401) {
+      return {
+        ok: false,
+        msg: 'Your session has expired',
+      }
+    }
+
+    console.error(error)
+    throw new Error('Something went wrong while fetching orders')
+  }
 }
