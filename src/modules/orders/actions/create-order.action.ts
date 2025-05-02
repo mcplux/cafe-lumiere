@@ -8,8 +8,27 @@ interface NewOrder {
   orderStatus?: OrderStatus
 }
 
-export const createOrderAction = async (order: NewOrder) => {
-  const { data } = await cafeLumiereApi.post<OrderResponse>('/orders', order)
+type CreateOrderResponse =
+  | {
+      ok: true
+      order: OrderResponse
+    }
+  | {
+      ok: false
+      code: number
+      msg: string
+    }
 
-  return data
+export const createOrderAction = async (order: NewOrder): Promise<CreateOrderResponse> => {
+  try {
+    const { data } = await cafeLumiereApi.post<OrderResponse>('/orders', order)
+
+    return {
+      ok: true,
+      order: data,
+    }
+  } catch (error) {
+    console.error(error)
+    throw new Error('Something went wrong while creating order')
+  }
 }
