@@ -120,9 +120,20 @@ export const useOrdersStore = defineStore('orders', () => {
     orderReqStatus.value = OrderReqStatus.LOADING
 
     try {
-      const order = await getOrderAction(id)
+      const response = await getOrderAction(id)
+      if (!response.ok) {
+        toast.error(response.msg)
+        resetState()
+        orderReqStatus.value = OrderReqStatus.ERROR
+        if (response.code === 401) {
+          router.replace({ name: 'login' })
+          return authStore.logout()
+        }
+
+        return false
+      }
       orderReqStatus.value = OrderReqStatus.SUCCESS
-      return order
+      return response.order
     } catch {
       orderReqStatus.value = OrderReqStatus.ERROR
     }

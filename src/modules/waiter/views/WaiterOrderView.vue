@@ -28,7 +28,10 @@ const handleDelete = async (id: string) => {
 }
 
 onMounted(async () => {
-  order.value = (await ordersStore.getOrder(id)) ?? null
+  const orderResponse = await ordersStore.getOrder(id)
+  if (orderResponse) {
+    order.value = orderResponse
+  }
 })
 </script>
 
@@ -45,6 +48,8 @@ onMounted(async () => {
   </div>
 
   <LoadingSpinner v-if="ordersStore.isLoading" />
+
+  <p class="mt-5 text-center text-gray-700" v-if="ordersStore.isError">Order Not Found</p>
 
   <div v-if="ordersStore.isSuccess && order" class="mt-10">
     <div class="flex flex-col gap-3 border border-gray-700 rounded p-5">
