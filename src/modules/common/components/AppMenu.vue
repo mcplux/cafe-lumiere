@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import { useAuthStore } from '@/modules/auth/stores/auth.store'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useRouter } from 'vue-router'
@@ -11,18 +11,8 @@ import {
   ReceiptPercentIcon,
 } from '@heroicons/vue/16/solid'
 
-interface Route {
-  to: { name: string }
-  title: string
-}
-
 const authStore = useAuthStore()
 const router = useRouter()
-
-const routes = ref<Route[]>([
-  { to: { name: 'home' }, title: 'Home' },
-  { to: { name: 'public-menu' }, title: 'Menu' },
-])
 
 const handleLogout = () => {
   authStore.logout()
@@ -31,10 +21,6 @@ const handleLogout = () => {
 
 onMounted(async () => {
   await authStore.checkAuthStatus()
-
-  if (authStore.isWaiter) {
-    routes.value.push({ to: { name: 'waiter-orders' }, title: 'Orders' })
-  }
 })
 </script>
 
@@ -99,7 +85,7 @@ onMounted(async () => {
             </RouterLink>
           </MenuItem>
 
-          <MenuItem v-slot="{ active }" v-if="authStore.isWaiter">
+          <MenuItem v-slot="{ active }" v-if="authStore.isAuthenticated">
             <button
               :class="[
                 active ? 'bg-orange-500 text-white' : 'text-gray-900',

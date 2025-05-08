@@ -1,14 +1,5 @@
 <script setup lang="ts">
 import AppMenu from './AppMenu.vue'
-
-interface Props {
-  routes: {
-    to: { name: string }
-    title: string
-  }[]
-}
-
-defineProps<Props>()
 </script>
 
 <template>
