@@ -4,8 +4,10 @@ import { useRoute } from 'vue-router'
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 
 import { useOrdersStore } from '@/modules/orders/stores/orders.store'
+
 import OrderMenu from '@/modules/orders/components/OrderMenu.vue'
 import OrderPreview from '@/modules/orders/components/OrderPreview.vue'
+import TitlePage from '@/modules/common/components/TitlePage.vue'
 
 const route = useRoute()
 const id = route.params.id as string
@@ -36,7 +38,7 @@ watch(ordersStore, () => {
 </script>
 
 <template>
-  <h1 class="text-3xl text-center font-bold">Edit Order</h1>
+  <TitlePage title="Edit Order" />
 
   <div class="w-full mt-10">
     <TabGroup>

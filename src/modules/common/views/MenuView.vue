@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+
 import { useMenuStore } from '@/modules/menu/stores/menu.store'
 import MenuList from '@/modules/menu/components/MenuList.vue'
 import LoadingSpinner from '../components/LoadingSpinner.vue'
-import { onMounted } from 'vue'
+import TitlePage from '../components/TitlePage.vue'
 
 const menuStore = useMenuStore()
 
@@ -12,7 +14,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="text-3xl text-center font-bold">Menu</h1>
+  <TitlePage title="Menu" />
 
   <div v-if="menuStore.isSuccess">
     <p class="text-lg text-center mt-10 text-gray-700" v-if="menuStore.menuItems.length === 0">

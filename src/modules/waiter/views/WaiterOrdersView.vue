@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
 import OrderList from '@/modules/orders/components/OrderList.vue'
-import { useOrdersStore } from '@/modules/orders/stores/orders.store'
 import { onMounted } from 'vue'
 import OrderFilters from '../components/OrderFilters.vue'
+import TitlePage from '@/modules/common/components/TitlePage.vue'
 
 const ordersStore = useOrdersStore()
 
@@ -13,7 +14,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1 class="text-3xl text-center font-bold">Orders</h1>
+  <TitlePage title="Orders" />
+
   <div class="flex justify-end">
     <RouterLink
       :to="{ name: 'waiter-new-order' }"

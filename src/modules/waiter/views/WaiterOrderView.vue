@@ -36,7 +36,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="text-3xl text-center font-bold">Order - {{ id.substring(0, 8) }}</h1>
+  <TitlePage :title="`Order - ${id.substring(0, 8)}`" />
 
   <div class="flex justify-end">
     <RouterLink
