@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="border border-gray-700 p-5 rounded w-1/3 flex flex-col gap-1 shadow-md">
+  <div class="border border-gray-700 p-5 rounded sm:w-1/3 flex flex-col gap-1 shadow-md">
     <p class="text-gray-600 text-sm">{{ title }}:</p>
     <p class="text-xl font-bold">{{ value }}</p>
     <p
