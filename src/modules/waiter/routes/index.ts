@@ -1,25 +1,22 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 import { isWaiterGuard } from '../guards/is-waiter.guard'
-import WaiterLayout from '../layouts/WaiterLayout.vue'
-import WaiterOrdersLayout from '../layouts/WaiterOrdersLayout.vue'
-import WaiterOrdersView from '../views/WaiterOrdersView.vue'
 
 export const waiterRoutes: RouteRecordRaw = {
   path: '/waiter',
   name: 'waiter',
   redirect: { name: 'waiter-orders' },
   beforeEnter: [isWaiterGuard],
-  component: WaiterLayout,
+  component: () => import('../layouts/WaiterLayout.vue'),
   children: [
     {
       path: 'orders',
-      component: WaiterOrdersLayout,
+      component: () => import('../layouts/WaiterOrdersLayout.vue'),
       children: [
         {
           path: '',
           name: 'waiter-orders',
-          component: WaiterOrdersView,
+          component: () => import('../views/WaiterOrdersView.vue'),
         },
         {
           path: 'new',
@@ -37,11 +34,6 @@ export const waiterRoutes: RouteRecordRaw = {
           component: () => import('../views/WaiterEditOrderView.vue'),
         },
       ],
-    },
-    {
-      path: 'menu',
-      name: 'waiter-menu',
-      component: () => import('@/modules/common/views/MenuView.vue'),
     },
   ],
 }
