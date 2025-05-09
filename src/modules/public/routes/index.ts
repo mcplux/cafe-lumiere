@@ -12,10 +12,10 @@ export const publicRoutes: RouteRecordRaw = {
       name: 'home',
       component: HomeView,
     },
-    {
-      path: 'menu',
-      name: 'public-menu',
-      component: () => import('@/modules/common/views/MenuView.vue'),
-    },
+    // {
+    //   path: 'menu',
+    //   name: 'public-menu',
+    //   component: () => import('@/modules/common/views/MenuView.vue'),
+    // },
   ],
 }

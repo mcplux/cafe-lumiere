@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useAuthStore } from '@/modules/auth/stores/auth.store'
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useRouter } from 'vue-router'
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import {
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
   BookOpenIcon,
+  ChartBarIcon,
   HomeIcon,
   ReceiptPercentIcon,
 } from '@heroicons/vue/16/solid'
+
+import { useAuthStore } from '@/modules/auth/stores/auth.store'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -65,10 +67,23 @@ onMounted(async () => {
                 active ? 'bg-orange-500 text-white' : 'text-gray-900',
                 'group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2',
               ]"
-              :to="{ name: 'public-menu' }"
+              :to="{ name: 'menu' }"
             >
               <BookOpenIcon class="size-4" />
               Menu
+            </RouterLink>
+          </MenuItem>
+
+          <MenuItem v-slot="{ active }" v-if="authStore.isAdmin">
+            <RouterLink
+              :class="[
+                active ? 'bg-orange-500 text-white' : 'text-gray-900',
+                'group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2',
+              ]"
+              :to="{ name: 'admin-dashboard' }"
+            >
+              <ChartBarIcon class="size-4" />
+              Dashboard
             </RouterLink>
           </MenuItem>
 

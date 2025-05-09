@@ -3,8 +3,8 @@ import { onMounted } from 'vue'
 
 import { useMenuStore } from '@/modules/menu/stores/menu.store'
 import MenuList from '@/modules/menu/components/MenuList.vue'
-import LoadingSpinner from '../components/LoadingSpinner.vue'
-import TitlePage from '../components/TitlePage.vue'
+import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
+import TitlePage from '@/modules/common/components/TitlePage.vue'
 
 const menuStore = useMenuStore()
 
