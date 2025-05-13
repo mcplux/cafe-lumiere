@@ -1,4 +1,5 @@
 import type { RouteRecordRaw } from 'vue-router'
+import { isAdminGuard } from '@/modules/admin/guards/is-admin.guard'
 
 export const menuRoutes: RouteRecordRaw = {
   path: '/menu',
@@ -11,6 +12,7 @@ export const menuRoutes: RouteRecordRaw = {
     },
     {
       path: 'management',
+      beforeEnter: [isAdminGuard],
       children: [
         {
           path: '',
