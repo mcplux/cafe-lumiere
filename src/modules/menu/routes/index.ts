@@ -22,6 +22,11 @@ export const menuRoutes: RouteRecordRaw = {
           name: 'new-menu-item',
           component: () => import('../views/CreateMenuItemView.vue'),
         },
+        {
+          path: ':id/edit',
+          name: 'edit-menu-item',
+          component: () => import('../views/EditMenuItemView.vue'),
+        },
       ],
     },
   ],

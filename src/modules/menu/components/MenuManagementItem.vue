@@ -16,7 +16,12 @@ defineProps<{
     </div>
     <h3 class="text-lg font-bold">{{ item.name }}</h3>
     <div class="mt-2">
-      <button class="w-full p-1 text-white rounded bg-blue-600">Edit</button>
+      <RouterLink
+        :to="{ name: 'edit-menu-item', params: { id: item.id } }"
+        class="block text-center p-1 text-white rounded bg-blue-600"
+      >
+        Edit
+      </RouterLink>
     </div>
   </div>
 </template>

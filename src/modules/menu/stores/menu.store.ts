@@ -61,5 +61,6 @@ export const useMenuStore = defineStore('menu', () => {
     isSuccess: computed(() => menuStatus.value === MenuStatus.SUCCESS),
     isLoading: computed(() => menuStatus.value === MenuStatus.LOADING),
     isError: computed(() => menuStatus.value === MenuStatus.ERROR),
+    isEmpty: computed(() => menuItems.value.length === 0),
   }
 })
