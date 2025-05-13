@@ -17,6 +17,11 @@ export const menuRoutes: RouteRecordRaw = {
           name: 'menu-management',
           component: () => import('../views/MenuManagementView.vue'),
         },
+        {
+          path: 'new',
+          name: 'new-menu-item',
+          component: () => import('../views/CreateMenuItemView.vue'),
+        },
       ],
     },
   ],

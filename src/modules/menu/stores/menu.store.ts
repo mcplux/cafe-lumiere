@@ -2,11 +2,12 @@ import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
 import { getMenuItemsAction, getMenuItemAction } from '../actions'
-import { MenuStatus, type MenuItem } from '../interfaces'
+import { MenuStatus, type MenuItem, type NewMenuItem } from '../interfaces'
+import { createMenuItemAction } from '../actions/create-menu-item.action'
 
 export const useMenuStore = defineStore('menu', () => {
   const menuItems = ref<MenuItem[]>([])
-  const menuStatus = ref<MenuStatus>(MenuStatus.LOADING)
+  const menuStatus = ref<MenuStatus>(MenuStatus.SUCCESS)
 
   const getMenuItems = async () => {
     try {
@@ -34,11 +35,29 @@ export const useMenuStore = defineStore('menu', () => {
     }
   }
 
+  const createMenuItem = async (newItem: NewMenuItem): Promise<[boolean, string]> => {
+    try {
+      const response = await createMenuItemAction(newItem)
+      if (!response.ok) {
+        return [false, response.msg]
+      }
+
+      return [true, 'Menu Item created successfuly']
+    } catch (error) {
+      if (error instanceof Error) {
+        return [false, error.message]
+      }
+
+      return [false, 'Something went wrong']
+    }
+  }
+
   return {
     menuItems,
     menuStatus,
     getMenuItems,
     getMenuItem,
+    createMenuItem,
     isSuccess: computed(() => menuStatus.value === MenuStatus.SUCCESS),
     isLoading: computed(() => menuStatus.value === MenuStatus.LOADING),
     isError: computed(() => menuStatus.value === MenuStatus.ERROR),

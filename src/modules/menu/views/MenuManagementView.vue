@@ -15,11 +15,12 @@ onMounted(async () => {
 
   <div v-if="menuStore.isSuccess" class="px-5">
     <div class="flex justify-end">
-      <button
+      <RouterLink
+        :to="{ name: 'new-menu-item' }"
         class="bg-orange-500 p-2 rounded text-white font-bold w-full sm:w-auto mt-5 text-center"
       >
         Add New Item
-      </button>
+      </RouterLink>
     </div>
 
     <div class="mt-5">
