@@ -9,6 +9,7 @@ import {
   ChartBarIcon,
   HomeIcon,
   ReceiptPercentIcon,
+  Squares2X2Icon,
 } from '@heroicons/vue/16/solid'
 
 import { useAuthStore } from '@/modules/auth/stores/auth.store'
@@ -48,6 +49,19 @@ onMounted(async () => {
         <MenuItems
           class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
         >
+          <MenuItem v-slot="{ active }" v-if="authStore.isAdmin">
+            <RouterLink
+              :class="[
+                active ? 'bg-orange-500 text-white' : 'text-gray-900',
+                'group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2',
+              ]"
+              :to="{ name: 'admin-dashboard' }"
+            >
+              <ChartBarIcon class="size-4" />
+              Dashboard
+            </RouterLink>
+          </MenuItem>
+
           <MenuItem v-slot="{ active }">
             <RouterLink
               :class="[
@@ -80,10 +94,10 @@ onMounted(async () => {
                 active ? 'bg-orange-500 text-white' : 'text-gray-900',
                 'group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2',
               ]"
-              :to="{ name: 'admin-dashboard' }"
+              :to="{ name: 'menu-management' }"
             >
-              <ChartBarIcon class="size-4" />
-              Dashboard
+              <Squares2X2Icon class="size-4" />
+              Manage Menu
             </RouterLink>
           </MenuItem>
 
