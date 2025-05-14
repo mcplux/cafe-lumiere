@@ -34,7 +34,9 @@ const handleSubmit = async () => {
     return
   }
 
-  const [ok, msg] = await menuStore.createMenuItem(props.formData)
+  const { id, ...data } = props.formData
+
+  const [ok, msg] = await menuStore.saveMenuItem(data, id)
 
   if (!ok) {
     toast.error(msg)

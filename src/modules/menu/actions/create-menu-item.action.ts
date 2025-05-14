@@ -1,5 +1,5 @@
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { MenuItem, NewMenuItem } from '../interfaces'
+import type { MenuItem, CreateMenuItem } from '../interfaces'
 import { isAxiosError } from 'axios'
 
 type CreateMenuItemResponse =
@@ -14,7 +14,7 @@ type CreateMenuItemResponse =
     }
 
 export const createMenuItemAction = async (
-  newItem: NewMenuItem,
+  newItem: CreateMenuItem,
 ): Promise<CreateMenuItemResponse> => {
   try {
     const { data } = await cafeLumiereApi.post<MenuItem>('/menu', newItem)

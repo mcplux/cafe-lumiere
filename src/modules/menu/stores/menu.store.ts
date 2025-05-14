@@ -1,9 +1,13 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 
-import { getMenuItemsAction, getMenuItemAction } from '../actions'
-import { MenuStatus, type MenuItem, type NewMenuItem } from '../interfaces'
-import { createMenuItemAction } from '../actions/create-menu-item.action'
+import {
+  getMenuItemsAction,
+  getMenuItemAction,
+  createMenuItemAction,
+  updateMenuItemAction,
+} from '../actions'
+import { MenuStatus, type MenuItem, type CreateMenuItem } from '../interfaces'
 
 export const useMenuStore = defineStore('menu', () => {
   const menuItems = ref<MenuItem[]>([])
@@ -41,20 +45,48 @@ export const useMenuStore = defineStore('menu', () => {
     }
   }
 
-  const createMenuItem = async (newItem: NewMenuItem): Promise<[boolean, string]> => {
+  const createMenuItem = async (newItem: CreateMenuItem): Promise<[boolean, string]> => {
     try {
       const response = await createMenuItemAction(newItem)
       if (!response.ok) {
         return [false, response.msg]
       }
 
-      return [true, 'Menu Item created successfuly']
+      return [true, 'Item created successfuly']
     } catch (error) {
       if (error instanceof Error) {
         return [false, error.message]
       }
 
-      return [false, 'Something went wrong']
+      return [false, 'Something went wrong while creating a menu item']
+    }
+  }
+
+  const updateMenuItem = async (
+    id: string,
+    updatedItem: CreateMenuItem,
+  ): Promise<[boolean, string]> => {
+    try {
+      const response = await updateMenuItemAction(id, updatedItem)
+      if (!response.ok) {
+        return [false, response.msg]
+      }
+
+      return [true, 'Item updated successfullty']
+    } catch (error) {
+      if (error instanceof Error) {
+        return [false, error.message]
+      }
+
+      return [false, 'Something went wrong while updating a menu item']
+    }
+  }
+
+  const saveMenuItem = async (item: CreateMenuItem, id?: string): Promise<[boolean, string]> => {
+    if (id) {
+      return await updateMenuItem(id, item)
+    } else {
+      return await createMenuItem(item)
     }
   }
 
@@ -64,6 +96,7 @@ export const useMenuStore = defineStore('menu', () => {
     getMenuItems,
     getMenuItem,
     createMenuItem,
+    saveMenuItem,
     isSuccess: computed(() => menuStatus.value === MenuStatus.SUCCESS),
     isLoading: computed(() => menuStatus.value === MenuStatus.LOADING),
     isError: computed(() => menuStatus.value === MenuStatus.ERROR),

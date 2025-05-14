@@ -1,4 +1,4 @@
-export interface NewMenuItem {
+export interface CreateMenuItem {
   name: string
   price: number
   description: string
