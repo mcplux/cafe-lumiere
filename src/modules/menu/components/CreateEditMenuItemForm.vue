@@ -3,9 +3,11 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 import { useMenuStore } from '../stores/menu.store'
+import { computed } from 'vue'
 
 const props = defineProps<{
   formData: {
+    id?: string
     name: string
     price: number
     description: string
@@ -42,6 +44,8 @@ const handleSubmit = async () => {
   toast.success(msg)
   router.push({ name: 'menu-management' })
 }
+
+const isEditing = computed(() => !!props.formData.id)
 </script>
 
 <template>
@@ -82,6 +86,8 @@ const handleSubmit = async () => {
       />
     </div>
 
-    <button class="bg-blue-600 py-1 rounded text-white mt-2" type="submit">Create New Item</button>
+    <button class="bg-blue-600 py-1 rounded text-white mt-2" type="submit">
+      {{ isEditing ? 'Update Item' : 'Create New Item' }}
+    </button>
   </form>
 </template>

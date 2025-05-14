@@ -20,18 +20,24 @@ export const useMenuStore = defineStore('menu', () => {
     }
   }
 
-  const getMenuItem = async (id: string) => {
+  const getMenuItem = async (id: string): Promise<[false, null, string] | [true, MenuItem]> => {
     try {
       menuStatus.value = MenuStatus.LOADING
-      const menuItem = await getMenuItemAction(id)
+      const response = await getMenuItemAction(id)
+
+      if (!response.ok) {
+        menuStatus.value = MenuStatus.ERROR
+        return [false, null, response.msg]
+      }
+
       menuStatus.value = MenuStatus.SUCCESS
-
-      return menuItem
+      return [true, response.menuItem]
     } catch (error) {
-      console.log(error)
-      menuStatus.value = MenuStatus.ERROR
+      if (error instanceof Error) {
+        return [false, null, error.message]
+      }
 
-      return null
+      return [false, null, 'Something went wrong while getting an item']
     }
   }
 
