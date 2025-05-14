@@ -6,6 +6,7 @@ import {
   getMenuItemAction,
   createMenuItemAction,
   updateMenuItemAction,
+  deleteMenuItemAction,
 } from '../actions'
 import { MenuStatus, type MenuItem, type CreateMenuItem } from '../interfaces'
 
@@ -14,8 +15,8 @@ export const useMenuStore = defineStore('menu', () => {
   const menuStatus = ref<MenuStatus>(MenuStatus.SUCCESS)
 
   const getMenuItems = async () => {
+    menuStatus.value = MenuStatus.LOADING
     try {
-      menuStatus.value = MenuStatus.LOADING
       menuItems.value = await getMenuItemsAction()
       menuStatus.value = MenuStatus.SUCCESS
     } catch (error) {
@@ -42,6 +43,31 @@ export const useMenuStore = defineStore('menu', () => {
       }
 
       return [false, null, 'Something went wrong while getting an item']
+    }
+  }
+
+  const saveMenuItem = async (item: CreateMenuItem, id?: string): Promise<[boolean, string]> => {
+    if (id) {
+      return await updateMenuItem(id, item)
+    } else {
+      return await createMenuItem(item)
+    }
+  }
+
+  const deleteMenuItem = async (id: string): Promise<[boolean, string]> => {
+    try {
+      const response = await deleteMenuItemAction(id)
+      if (!response.ok) {
+        return [false, response.msg]
+      }
+
+      return [true, 'Menu Item deleted successfully']
+    } catch (error) {
+      if (error instanceof Error) {
+        return [false, error.message]
+      }
+
+      return [false, 'Something went wrong while deleting an item']
     }
   }
 
@@ -82,21 +108,13 @@ export const useMenuStore = defineStore('menu', () => {
     }
   }
 
-  const saveMenuItem = async (item: CreateMenuItem, id?: string): Promise<[boolean, string]> => {
-    if (id) {
-      return await updateMenuItem(id, item)
-    } else {
-      return await createMenuItem(item)
-    }
-  }
-
   return {
     menuItems,
     menuStatus,
     getMenuItems,
     getMenuItem,
-    createMenuItem,
     saveMenuItem,
+    deleteMenuItem,
     isSuccess: computed(() => menuStatus.value === MenuStatus.SUCCESS),
     isLoading: computed(() => menuStatus.value === MenuStatus.LOADING),
     isError: computed(() => menuStatus.value === MenuStatus.ERROR),

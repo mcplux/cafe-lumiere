@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
+
 import { useMenuStore } from '../stores/menu.store'
 import TitlePage from '@/modules/common/components/TitlePage.vue'
 import MenuManagementItem from '../components/MenuManagementItem.vue'
+import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
 
 const menuStore = useMenuStore()
 
@@ -24,12 +26,14 @@ onMounted(async () => {
       </RouterLink>
     </div>
 
-    <div class="mt-5">
+    <div class="mt-5" v-if="menuStore.isSuccess">
       <p class="text-lg text-center mt-10 text-gray-700" v-if="menuStore.isEmpty">Menu is empty</p>
 
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <MenuManagementItem v-for="item in menuStore.menuItems" :key="item.id" :item="item" />
       </div>
     </div>
+
+    <LoadingSpinner v-if="menuStore.isLoading" />
   </div>
 </template>

@@ -6,6 +6,7 @@ import { useToast } from 'vue-toastification'
 import TitlePage from '@/modules/common/components/TitlePage.vue'
 import { useMenuStore } from '../stores/menu.store'
 import CreateEditMenuItemForm from '../components/CreateEditMenuItemForm.vue'
+import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
 
 const formData = ref<{
   id: string
@@ -59,5 +60,11 @@ onMounted(async () => {
 <template>
   <TitlePage title="Edit Item" />
 
-  <CreateEditMenuItemForm :form-data="formData" @update-form-data="updateFormData" />
+  <CreateEditMenuItemForm
+    :form-data="formData"
+    @update-form-data="updateFormData"
+    v-if="menuStore.isSuccess"
+  />
+
+  <LoadingSpinner v-if="menuStore.isLoading" />
 </template>
