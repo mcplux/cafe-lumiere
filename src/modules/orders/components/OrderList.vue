@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { OrderResponse } from '../interfaces/order.response'
+import type { OrderResponse } from '../interfaces/order.interface'
 import OrderCard from './OrderCard.vue'
 
 interface Props {

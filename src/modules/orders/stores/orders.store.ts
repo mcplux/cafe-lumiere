@@ -3,7 +3,7 @@ import { useToast } from 'vue-toastification'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
-import type { OrderItem, OrderResponse, SearchFilters } from '../interfaces'
+import { type OrderItem, type Order, type SearchFilters, OrderStatus } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction, deleteOrderAction, getOrderAction } from '../actions'
 import { editOrderAction } from '../actions/edit-order.action'
@@ -16,14 +16,15 @@ enum OrderReqStatus {
   ERROR = 'error',
 }
 
-const initialOrder: OrderResponse = {
+const initialOrder: Order = {
   id: '',
   notes: '',
   client: '',
   createdAt: new Date(),
   updatedAt: new Date(),
   orderItems: [],
-  orderStatus: 'pending',
+  orderStatus: OrderStatus.PENDING,
+  total: 0,
 }
 
 export const useOrdersStore = defineStore('orders', () => {
@@ -32,8 +33,8 @@ export const useOrdersStore = defineStore('orders', () => {
 
   const authStore = useAuthStore()
 
-  const orders = ref<OrderResponse[]>([])
-  const order = reactive<OrderResponse>({ ...initialOrder })
+  const orders = ref<Order[]>([])
+  const order = reactive<Order>({ ...initialOrder })
   const orderItems = ref<Omit<OrderItem, 'id'>[]>([])
 
   const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.SUCCESS)
@@ -116,7 +117,7 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
-  const getOrder = async (id: OrderResponse['id']) => {
+  const getOrder = async (id: Order['id']) => {
     orderReqStatus.value = OrderReqStatus.LOADING
 
     try {

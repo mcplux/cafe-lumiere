@@ -1,4 +1,4 @@
-import type { OrderResponse } from '@/modules/orders/interfaces/order.response'
+import type { OrderResponse } from '@/modules/orders/interfaces/order.interface'
 import { formatCurrency } from './format-currency'
 
 export const getOrderTotalAmount = (order: OrderResponse): string => {

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { getOrderTotalAmount } from '@/modules/common/helpers'
-import type { OrderResponse } from '../interfaces/order.response'
+import type { OrderResponse } from '../interfaces/order.interface'
 import { formatDate } from '@/modules/common/helpers/format-date'
 
 interface Props {

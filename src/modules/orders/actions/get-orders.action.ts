@@ -1,7 +1,7 @@
 import qs from 'qs'
 
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { OrderResponse } from '../interfaces/order.response'
+import type { OrderResponse } from '../interfaces/order.interface'
 import { formatLocalISOString } from '@/modules/common/helpers'
 import type { SearchFilters } from '../interfaces'
 import { isAxiosError } from 'axios'

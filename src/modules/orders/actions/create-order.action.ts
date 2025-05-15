@@ -1,5 +1,5 @@
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { OrderResponse, OrderStatus } from '../interfaces'
+import type { Order, OrderStatus } from '../interfaces'
 
 interface NewOrder {
   client: string
@@ -11,7 +11,7 @@ interface NewOrder {
 type CreateOrderResponse =
   | {
       ok: true
-      order: OrderResponse
+      order: Order
     }
   | {
       ok: false
@@ -21,7 +21,7 @@ type CreateOrderResponse =
 
 export const createOrderAction = async (order: NewOrder): Promise<CreateOrderResponse> => {
   try {
-    const { data } = await cafeLumiereApi.post<OrderResponse>('/orders', order)
+    const { data } = await cafeLumiereApi.post<Order>('/orders', order)
 
     return {
       ok: true,
