@@ -43,7 +43,7 @@ export const useOrdersStore = defineStore('orders', () => {
   const searchFilters = reactive<SearchFilters>({
     pending: true,
     completed: true,
-    paid: true,
+    paid: false,
     cancelled: false,
   })
 
@@ -89,32 +89,27 @@ export const useOrdersStore = defineStore('orders', () => {
   }
 
   // Database actions
-  const getTodayOrders = async () => {
+  const getOrders = async (startDate: Date, endDate: Date): Promise<[boolean, string]> => {
     orderReqStatus.value = OrderReqStatus.LOADING
-
-    const now = new Date()
-
-    const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
-
     try {
       const response = await getOrdersAction(startDate, endDate, searchFilters)
       if (!response.ok) {
-        toast.error(response.msg)
-        orders.value = []
         orderReqStatus.value = OrderReqStatus.ERROR
-        router.replace({ name: 'login' })
-        return authStore.logout()
+        return [false, response.msg]
       }
-
-      orders.value = response.orders
 
       orderReqStatus.value = OrderReqStatus.SUCCESS
+      orders.value = response.orders
+      return [true, '']
     } catch (error) {
       if (error instanceof Error) {
-        toast.error(error.message)
+        orderReqStatus.value = OrderReqStatus.ERROR
+
+        return [false, error.message]
       }
+
       orderReqStatus.value = OrderReqStatus.ERROR
+      return [false, 'Something went wrong while fetching orders']
     }
   }
 
@@ -199,7 +194,7 @@ export const useOrdersStore = defineStore('orders', () => {
     removeOrderItem,
     increaseQuantity,
     decreaseQuantity,
-    getTodayOrders,
+    getOrders,
     getOrder,
     saveOrder,
     deleteOrder,
@@ -207,6 +202,7 @@ export const useOrdersStore = defineStore('orders', () => {
     isLoading: computed(() => orderReqStatus.value === OrderReqStatus.LOADING),
     isError: computed(() => orderReqStatus.value === OrderReqStatus.ERROR),
     isSuccess: computed(() => orderReqStatus.value === OrderReqStatus.SUCCESS),
+    noOrders: computed(() => orders.value.length === 0),
     orderTotal,
   }
 })

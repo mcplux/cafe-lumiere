@@ -9,7 +9,7 @@ import TitlePage from '@/modules/common/components/TitlePage.vue'
 const ordersStore = useOrdersStore()
 
 onMounted(() => {
-  ordersStore.getTodayOrders()
+  // ordersStore.getTodayOrders()
 })
 </script>
 

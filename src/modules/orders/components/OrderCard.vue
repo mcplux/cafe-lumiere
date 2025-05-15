@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { getOrderTotalAmount } from '@/modules/common/helpers'
-import type { OrderResponse } from '../interfaces/order.interface'
+import { formatCurrency } from '@/modules/common/helpers'
+import type { Order } from '../interfaces/order.interface'
 import { formatDate } from '@/modules/common/helpers/format-date'
 
 interface Props {
-  order: OrderResponse
+  order: Order
 }
 
 defineProps<Props>()
@@ -19,7 +19,7 @@ const orderStatusColors = {
 
 <template>
   <RouterLink
-    :to="{ name: 'waiter-order', params: { id: order.id } }"
+    :to="{ name: 'order', params: { id: order.id } }"
     class="border border-gray-700 flex flex-col gap-2 rounded p-3 cursor-pointer hover:scale-105 transition-all shadow"
   >
     <p class="text-xs text-gray-700 font-light">{{ order.id.substring(0, 8) }}</p>
@@ -28,6 +28,6 @@ const orderStatusColors = {
     </p>
     <p class="text-sm text-gray-700">{{ formatDate(order.createdAt) }}</p>
     <p class="uppercase font-bold">{{ order.client }}</p>
-    <p class="text-lg font-bold">{{ getOrderTotalAmount(order) }}</p>
+    <p class="text-lg font-bold">{{ formatCurrency(order.total) }}</p>
   </RouterLink>
 </template>

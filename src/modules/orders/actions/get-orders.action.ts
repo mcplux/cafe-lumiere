@@ -1,7 +1,7 @@
 import qs from 'qs'
 
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { OrderResponse } from '../interfaces/order.interface'
+import type { Order } from '../interfaces/order.interface'
 import { formatLocalISOString } from '@/modules/common/helpers'
 import type { SearchFilters } from '../interfaces'
 import { isAxiosError } from 'axios'
@@ -15,10 +15,11 @@ interface QueryParams {
 type GetOrdersResponse =
   | {
       ok: true
-      orders: OrderResponse[]
+      orders: Order[]
     }
   | {
       ok: false
+      status: number
       msg: string
     }
 
@@ -50,7 +51,7 @@ export const getOrdersAction = async (
   }
 
   try {
-    const { data } = await cafeLumiereApi.get<OrderResponse[]>('/orders', {
+    const { data } = await cafeLumiereApi.get<Order[]>('/orders', {
       params,
       paramsSerializer: () => qs.stringify(params, { arrayFormat: 'repeat' }),
     })
@@ -63,6 +64,7 @@ export const getOrdersAction = async (
     if (isAxiosError(error) && error.status === 401) {
       return {
         ok: false,
+        status: error.status,
         msg: 'Your session has expired',
       }
     }

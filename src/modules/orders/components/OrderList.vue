@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import type { OrderResponse } from '../interfaces/order.interface'
+import type { Order } from '../interfaces/order.interface'
 import OrderCard from './OrderCard.vue'
 
 interface Props {
-  orders: OrderResponse[]
+  orders: Order[]
 }
 
 defineProps<Props>()
