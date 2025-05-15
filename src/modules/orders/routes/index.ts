@@ -19,5 +19,10 @@ export const orderRoutes: RouteRecordRaw = {
       name: 'order',
       component: () => import('../views/OrderView.vue'),
     },
+    {
+      path: ':id/edit',
+      name: 'edit-order',
+      component: () => import('../views/EditOrderView.vue'),
+    },
   ],
 }

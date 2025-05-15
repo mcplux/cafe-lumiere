@@ -1,21 +1,21 @@
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { OrderResponse } from '../interfaces'
+import type { Order } from '../interfaces'
 import { isAxiosError } from 'axios'
 
 type GetOrderResponse =
   | {
       ok: true
-      order: OrderResponse
+      order: Order
     }
   | {
       ok: false
-      code: number
+      status: number
       msg: string
     }
 
-export const getOrderAction = async (id: OrderResponse['id']): Promise<GetOrderResponse> => {
+export const getOrderAction = async (id: Order['id']): Promise<GetOrderResponse> => {
   try {
-    const { data } = await cafeLumiereApi.get<OrderResponse>(`/orders/${id}`)
+    const { data } = await cafeLumiereApi.get<Order>(`/orders/${id}`)
 
     return {
       ok: true,
@@ -25,7 +25,7 @@ export const getOrderAction = async (id: OrderResponse['id']): Promise<GetOrderR
     if (isAxiosError(error) && error.status === 400) {
       return {
         ok: false,
-        code: error.status,
+        status: error.status,
         msg: 'Order not found',
       }
     }
@@ -33,7 +33,7 @@ export const getOrderAction = async (id: OrderResponse['id']): Promise<GetOrderR
     if (isAxiosError(error) && error.status === 401) {
       return {
         ok: false,
-        code: error.status,
+        status: error.status,
         msg: 'Your session has expired',
       }
     }
@@ -41,7 +41,7 @@ export const getOrderAction = async (id: OrderResponse['id']): Promise<GetOrderR
     if (isAxiosError(error) && error.status === 404) {
       return {
         ok: false,
-        code: error.status,
+        status: error.status,
         msg: 'Order not found',
       }
     }

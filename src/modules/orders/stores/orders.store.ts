@@ -12,8 +12,6 @@ import {
 } from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction, deleteOrderAction, getOrderAction } from '../actions'
-import { useAuthStore } from '@/modules/auth/stores/auth.store'
-import { useRouter } from 'vue-router'
 
 enum OrderReqStatus {
   SUCCESS = 'success',
@@ -29,10 +27,7 @@ const initialOrder = {
 }
 
 export const useOrdersStore = defineStore('orders', () => {
-  const router = useRouter()
   const toast = useToast()
-
-  const authStore = useAuthStore()
 
   const orders = ref<Order[]>([])
   const order = reactive({ ...initialOrder })
@@ -118,26 +113,26 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
-  const getOrder = async (id: Order['id']) => {
+  const getOrder = async (id: Order['id']): Promise<[boolean, Order | null, string]> => {
     orderReqStatus.value = OrderReqStatus.LOADING
 
     try {
       const response = await getOrderAction(id)
       if (!response.ok) {
-        toast.error(response.msg)
-        resetState()
-        orderReqStatus.value = OrderReqStatus.ERROR
-        if (response.code === 401) {
-          router.replace({ name: 'login' })
-          return authStore.logout()
-        }
-
-        return false
+        return [false, null, response.msg]
       }
+
       orderReqStatus.value = OrderReqStatus.SUCCESS
-      return response.order
-    } catch {
+      return [true, response.order, '']
+    } catch (error) {
+      if (error instanceof Error) {
+        orderReqStatus.value = OrderReqStatus.ERROR
+
+        return [false, null, error.message]
+      }
+
       orderReqStatus.value = OrderReqStatus.ERROR
+      return [false, null, 'Something went wrong while fetching order']
     }
   }
 
@@ -149,14 +144,26 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
-  const deleteOrder = async (id: string) => {
+  const deleteOrder = async (id: string): Promise<[boolean, string]> => {
     orderReqStatus.value = OrderReqStatus.LOADING
     try {
-      await deleteOrderAction(id)
+      const response = await deleteOrderAction(id)
+      if (!response.ok) {
+        orderReqStatus.value = OrderReqStatus.ERROR
+        return [false, response.msg]
+      }
+
       orderReqStatus.value = OrderReqStatus.SUCCESS
+      return [true, 'Order deleted successfully']
     } catch (error) {
-      console.error(error)
+      if (error instanceof Error) {
+        orderReqStatus.value = OrderReqStatus.ERROR
+
+        return [false, error.message]
+      }
+
       orderReqStatus.value = OrderReqStatus.ERROR
+      return [false, 'Something went wrong while deleting the order']
     }
   }
 
