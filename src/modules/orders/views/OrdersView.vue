@@ -3,9 +3,10 @@ import { onMounted } from 'vue'
 import { useToast } from 'vue-toastification'
 
 import { useOrdersStore } from '../stores/orders.store'
+import OrderCard from '../components/OrderCard.vue'
+import OrderFilters from '../components/OrderFilters.vue'
 import TitlePage from '@/modules/common/components/TitlePage.vue'
 import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
-import OrderCard from '../components/OrderCard.vue'
 
 const ordersStore = useOrdersStore()
 const toast = useToast()
@@ -13,10 +14,10 @@ const toast = useToast()
 onMounted(async () => {
   const now = new Date()
 
-  const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
+  ordersStore.dates.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  ordersStore.dates.endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
 
-  const [ok, msg] = await ordersStore.getOrders(startDate, endDate)
+  const [ok, msg] = await ordersStore.getOrders()
   if (!ok) {
     toast.error(msg)
   }
@@ -35,6 +36,8 @@ onMounted(async () => {
         Add Order
       </RouterLink>
     </div>
+
+    <OrderFilters />
 
     <p v-if="ordersStore.noOrders" class="text-center mt-10 text-gray-700 text-lg">No orders yet</p>
 

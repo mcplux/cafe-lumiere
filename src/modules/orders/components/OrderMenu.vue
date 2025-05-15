@@ -34,13 +34,13 @@ watch(filterInput, () => {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(' ', '')
+      .replace(/\s+/g, '')
 
     const filter = filterInput.value
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
-      .replace(' ', '')
+      .replace(/\s+/g, '')
 
     return word.includes(filter)
   })

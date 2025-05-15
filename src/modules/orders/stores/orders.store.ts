@@ -40,6 +40,11 @@ export const useOrdersStore = defineStore('orders', () => {
 
   const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.SUCCESS)
 
+  const dates = reactive({
+    startDate: new Date(),
+    endDate: new Date(),
+  })
+
   const searchFilters = reactive<SearchFilters>({
     pending: true,
     completed: true,
@@ -89,10 +94,10 @@ export const useOrdersStore = defineStore('orders', () => {
   }
 
   // Database actions
-  const getOrders = async (startDate: Date, endDate: Date): Promise<[boolean, string]> => {
+  const getOrders = async (): Promise<[boolean, string]> => {
     orderReqStatus.value = OrderReqStatus.LOADING
     try {
-      const response = await getOrdersAction(startDate, endDate, searchFilters)
+      const response = await getOrdersAction(dates.startDate, dates.endDate, searchFilters)
       if (!response.ok) {
         orderReqStatus.value = OrderReqStatus.ERROR
         return [false, response.msg]
@@ -188,6 +193,7 @@ export const useOrdersStore = defineStore('orders', () => {
     orders,
     order,
     orderItems,
+    dates,
     searchFilters,
     resetState,
     addOrderItem,
