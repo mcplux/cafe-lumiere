@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import {
+  ArrowLeftEndOnRectangleIcon,
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
   BookOpenIcon,
@@ -101,16 +102,29 @@ onMounted(async () => {
             </RouterLink>
           </MenuItem>
 
-          <MenuItem v-slot="{ active }" v-if="authStore.isWaiter">
+          <MenuItem v-slot="{ active }" v-if="authStore.isAuthenticated">
             <RouterLink
               :class="[
                 active ? 'bg-orange-500 text-white' : 'text-gray-900',
                 'group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2',
               ]"
-              :to="{ name: 'waiter-orders' }"
+              :to="{ name: 'orders' }"
             >
               <ReceiptPercentIcon class="size-4" />
               Orders
+            </RouterLink>
+          </MenuItem>
+
+          <MenuItem v-slot="{ active }" v-if="!authStore.isAuthenticated">
+            <RouterLink
+              :class="[
+                active ? 'bg-orange-500 text-white' : 'text-gray-900',
+                'group flex w-full items-center rounded-md px-2 py-2 text-sm gap-2',
+              ]"
+              :to="{ name: 'login' }"
+            >
+              <ArrowLeftEndOnRectangleIcon class="size-4" />
+              Login
             </RouterLink>
           </MenuItem>
 
