@@ -3,10 +3,15 @@ import { useToast } from 'vue-toastification'
 import { defineStore } from 'pinia'
 
 import { getOrdersAction } from '../actions/get-orders.action'
-import { type OrderItem, type Order, type SearchFilters, OrderStatus } from '../interfaces'
+import {
+  OrderStatus,
+  type OrderItem,
+  type Order,
+  type SearchFilters,
+  type CreateOrder,
+} from '../interfaces'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { createOrderAction, deleteOrderAction, getOrderAction } from '../actions'
-import { editOrderAction } from '../actions/edit-order.action'
 import { useAuthStore } from '@/modules/auth/stores/auth.store'
 import { useRouter } from 'vue-router'
 
@@ -16,15 +21,11 @@ enum OrderReqStatus {
   ERROR = 'error',
 }
 
-const initialOrder: Order = {
+const initialOrder = {
   id: '',
   notes: '',
   client: '',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  orderItems: [],
   orderStatus: OrderStatus.PENDING,
-  total: 0,
 }
 
 export const useOrdersStore = defineStore('orders', () => {
@@ -34,7 +35,7 @@ export const useOrdersStore = defineStore('orders', () => {
   const authStore = useAuthStore()
 
   const orders = ref<Order[]>([])
-  const order = reactive<Order>({ ...initialOrder })
+  const order = reactive({ ...initialOrder })
   const orderItems = ref<Omit<OrderItem, 'id'>[]>([])
 
   const orderReqStatus = ref<OrderReqStatus>(OrderReqStatus.SUCCESS)
@@ -140,34 +141,11 @@ export const useOrdersStore = defineStore('orders', () => {
     }
   }
 
-  const saveOrder = async () => {
-    orderReqStatus.value = OrderReqStatus.LOADING
-
-    const orderReq = {
-      client: order.client,
-      notes: order.notes,
-      orderStatus: order.orderStatus,
-      items: orderItems.value.map(({ menuItem, quantity }) => ({
-        quantity,
-        menuItemId: menuItem.id,
-      })),
-    }
-
-    try {
-      if (!order.id) {
-        // New order
-        await createOrderAction(orderReq)
-      } else {
-        // Update order
-        await editOrderAction(order.id, orderReq)
-      }
-
-      resetState()
-      orderReqStatus.value = OrderReqStatus.SUCCESS
-    } catch {
-      toast.error('Something went wrong')
-
-      orderReqStatus.value = OrderReqStatus.ERROR
+  const saveOrder = async (id: string | null, order: CreateOrder): Promise<[boolean, string]> => {
+    if (id) {
+      return Promise.resolve([true, 'Hello world!'])
+    } else {
+      return await createOrder(order)
     }
   }
 
@@ -181,6 +159,35 @@ export const useOrdersStore = defineStore('orders', () => {
       orderReqStatus.value = OrderReqStatus.ERROR
     }
   }
+
+  const createOrder = async (order: CreateOrder): Promise<[boolean, string]> => {
+    orderReqStatus.value = OrderReqStatus.LOADING
+    try {
+      const response = await createOrderAction(order)
+      if (!response.ok) {
+        orderReqStatus.value = OrderReqStatus.ERROR
+        return [false, response.msg]
+      }
+      orderReqStatus.value = OrderReqStatus.SUCCESS
+      resetState()
+      return [true, 'Order created successfully']
+    } catch (error) {
+      if (error instanceof Error) {
+        orderReqStatus.value = OrderReqStatus.ERROR
+
+        return [false, error.message]
+      }
+
+      orderReqStatus.value = OrderReqStatus.ERROR
+      return [false, 'Something went wrong while creating an order']
+    }
+  }
+
+  const orderTotal = computed(() =>
+    orderItems.value.reduce((total, orderItem) => {
+      return orderItem.quantity * orderItem.menuItem.price + total
+    }, 0),
+  )
 
   return {
     orders,
@@ -200,5 +207,6 @@ export const useOrdersStore = defineStore('orders', () => {
     isLoading: computed(() => orderReqStatus.value === OrderReqStatus.LOADING),
     isError: computed(() => orderReqStatus.value === OrderReqStatus.ERROR),
     isSuccess: computed(() => orderReqStatus.value === OrderReqStatus.SUCCESS),
+    orderTotal,
   }
 })

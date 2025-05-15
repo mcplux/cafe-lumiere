@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
+import { XMarkIcon } from '@heroicons/vue/16/solid'
 
-import OrderMenuItemCard from './OrderMenuItemCard.vue'
+import { useOrdersStore } from '../stores/orders.store'
 import type { MenuItem } from '@/modules/menu/interfaces'
 import { useMenuStore } from '@/modules/menu/stores/menu.store'
 import LoadingSpinner from '@/modules/common/components/LoadingSpinner.vue'
-import { XMarkIcon } from '@heroicons/vue/16/solid'
+import OrderMenuItemCard from './OrderMenuItemCard.vue'
 
 defineEmits<{
   addOrderItem: [menuItem: MenuItem]
 }>()
 
 const menuStore = useMenuStore()
+const ordersStore = useOrdersStore()
+
 const filteredItems = ref<MenuItem[]>([])
 
 const filterInput = ref('')
@@ -31,11 +34,13 @@ watch(filterInput, () => {
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
+      .replace(' ', '')
 
     const filter = filterInput.value
       .toLowerCase()
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
+      .replace(' ', '')
 
     return word.includes(filter)
   })
@@ -74,7 +79,7 @@ watch(filterInput, () => {
           v-for="menuItem in filteredItems"
           :key="menuItem.id"
           :menu-item="menuItem"
-          @add-order-item="(menuItem) => $emit('addOrderItem', menuItem)"
+          @add-order-item="(menuItem) => ordersStore.addOrderItem(menuItem)"
         />
       </div>
     </div>

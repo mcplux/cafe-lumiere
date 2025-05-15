@@ -1,14 +1,11 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 import OrderItemPreviewCard from './OrderItemPreviewCard.vue'
 import { formatCurrency } from '@/modules/common/helpers'
 import { useOrdersStore } from '../stores/orders.store'
-import { useRouter } from 'vue-router'
-
-defineProps<{
-  orderTotal: number
-}>()
+import type { CreateOrder } from '../interfaces'
 
 const orderStatus = ['pending', 'completed', 'paid', 'cancelled']
 
@@ -27,9 +24,23 @@ const handleNewOrder = async () => {
     toast.error('The order must have at least one item')
     return
   }
-  await ordersStore.saveOrder()
-  toast.success('Order created succefully')
-  router.push({ name: 'waiter-orders' })
+  const { id, ...data } = ordersStore.order
+
+  const order: CreateOrder = {
+    ...data,
+    items: ordersStore.orderItems.map((item) => ({
+      menuItemId: item.menuItem.id,
+      quantity: item.quantity,
+    })),
+  }
+
+  const [ok, msg] = await ordersStore.saveOrder(id || null, order)
+  if (ok) {
+    toast.success(msg)
+    router.push({ name: 'orders' })
+  } else {
+    toast.error(msg)
+  }
 }
 </script>
 
@@ -52,7 +63,7 @@ const handleNewOrder = async () => {
         </div>
 
         <div class="flex flex-col gap-1">
-          <label for="order_status">Client's Name</label>
+          <label for="order_status">Order Status</label>
           <select
             id="order_status"
             class="border border-gray-700 rounded p-1 uppercase"
@@ -95,7 +106,7 @@ const handleNewOrder = async () => {
         </div>
 
         <p class="text-lg text-right mt-5">
-          Total: <span class="font-bold">{{ formatCurrency(orderTotal) }}</span>
+          Total: <span class="font-bold">{{ formatCurrency(ordersStore.orderTotal) }}</span>
         </p>
       </div>
     </div>

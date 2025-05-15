@@ -1,12 +1,5 @@
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { Order, OrderStatus } from '../interfaces'
-
-interface NewOrder {
-  client: string
-  notes: string | null
-  items: { menuItemId: string; quantity: number }[]
-  orderStatus?: OrderStatus
-}
+import type { CreateOrder, Order } from '../interfaces'
 
 type CreateOrderResponse =
   | {
@@ -19,7 +12,7 @@ type CreateOrderResponse =
       msg: string
     }
 
-export const createOrderAction = async (order: NewOrder): Promise<CreateOrderResponse> => {
+export const createOrderAction = async (order: CreateOrder): Promise<CreateOrderResponse> => {
   try {
     const { data } = await cafeLumiereApi.post<Order>('/orders', order)
 
