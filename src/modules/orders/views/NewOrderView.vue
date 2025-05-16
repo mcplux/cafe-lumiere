@@ -3,8 +3,16 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from '@headlessui/vue'
 import TitlePage from '@/modules/common/components/TitlePage.vue'
 import OrderMenu from '../components/OrderMenu.vue'
 import OrderPreview from '../components/OrderPreview.vue'
+import { onUnmounted } from 'vue'
+import { useOrdersStore } from '../stores/orders.store'
 
 const tabNames = ['Menu', 'Preview Order']
+
+const ordersStore = useOrdersStore()
+
+onUnmounted(() => {
+  ordersStore.resetState()
+})
 </script>
 
 <template>

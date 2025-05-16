@@ -10,8 +10,8 @@ import {
   type SearchFilters,
   type CreateOrder,
 } from '../interfaces'
+import { createOrderAction, deleteOrderAction, getOrderAction, updateOrderAction } from '../actions'
 import type { MenuItem } from '@/modules/menu/interfaces'
-import { createOrderAction, deleteOrderAction, getOrderAction } from '../actions'
 
 enum OrderReqStatus {
   SUCCESS = 'success',
@@ -138,7 +138,7 @@ export const useOrdersStore = defineStore('orders', () => {
 
   const saveOrder = async (id: string | null, order: CreateOrder): Promise<[boolean, string]> => {
     if (id) {
-      return Promise.resolve([true, 'Hello world!'])
+      return await updateOrder(id, order)
     } else {
       return await createOrder(order)
     }
@@ -187,6 +187,32 @@ export const useOrdersStore = defineStore('orders', () => {
 
       orderReqStatus.value = OrderReqStatus.ERROR
       return [false, 'Something went wrong while creating an order']
+    } finally {
+      resetState()
+    }
+  }
+
+  const updateOrder = async (id: Order['id'], order: CreateOrder): Promise<[boolean, string]> => {
+    orderReqStatus.value = OrderReqStatus.LOADING
+    try {
+      const response = await updateOrderAction(id, order)
+      if (!response.ok) {
+        orderReqStatus.value = OrderReqStatus.ERROR
+        return [false, response.msg]
+      }
+
+      return [true, 'Order updated successfully']
+    } catch (error) {
+      if (error instanceof Error) {
+        orderReqStatus.value = OrderReqStatus.ERROR
+
+        return [false, error.message]
+      }
+
+      orderReqStatus.value = OrderReqStatus.ERROR
+      return [false, 'Something went wrong while editing the order']
+    } finally {
+      resetState()
     }
   }
 
