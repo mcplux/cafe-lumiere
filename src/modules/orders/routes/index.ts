@@ -1,7 +1,10 @@
 import type { RouteRecordRaw } from 'vue-router'
 
+import { isAuthenticatedGuard } from '@/modules/auth/guards/is-authenticated.guard'
+
 export const orderRoutes: RouteRecordRaw = {
   path: '/orders',
+  beforeEnter: [isAuthenticatedGuard],
   component: () => import('../layouts/OrdersLayout.vue'),
   children: [
     {
