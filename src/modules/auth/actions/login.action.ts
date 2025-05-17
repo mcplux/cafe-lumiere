@@ -1,6 +1,7 @@
-import cafeLumiereApi from '@/api/cafe-lumiere.api'
-import type { LoginResponse, User } from '../interfaces'
 import { isAxiosError } from 'axios'
+
+import cafeLumiereApi from '@/api/cafe-lumiere.api'
+import type { Login, User } from '../interfaces'
 
 type LoginActionResponse =
   | {
@@ -18,7 +19,7 @@ export const loginAction = async (
   password: string,
 ): Promise<LoginActionResponse> => {
   try {
-    const { data } = await cafeLumiereApi.post<LoginResponse>('/auth/login', { email, password })
+    const { data } = await cafeLumiereApi.post<Login>('/auth/login', { email, password })
 
     return { ok: true, token: data.token, user: data.user }
   } catch (error) {

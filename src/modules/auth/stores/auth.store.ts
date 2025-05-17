@@ -1,4 +1,4 @@
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 
 import { checkAuthStatusAction, loginAction } from '../actions'
@@ -8,34 +8,31 @@ export const useAuthStore = defineStore('auth', () => {
   const user = ref<User | null>(null)
   const authStatus = ref<AuthStatus>(AuthStatus.CHECKING)
   const token = ref<string>(localStorage.getItem('token') ?? '')
-  const authError = reactive({ error: false, message: '' })
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<[boolean, string]> => {
     authStatus.value = AuthStatus.CHECKING
 
     try {
-      const loginResponse = await loginAction(email, password)
+      const response = await loginAction(email, password)
 
-      if (!loginResponse.ok) {
+      if (!response.ok) {
         authStatus.value = AuthStatus.UNAUTHENTICATED
-        Object.assign(authError, { error: true, message: loginResponse.message })
-        return false
+        return [false, response.message]
       }
 
-      token.value = loginResponse.token
+      token.value = response.token
       authStatus.value = AuthStatus.AUTHENTICATED
-      user.value = loginResponse.user
+      user.value = response.user
 
-      return true
+      return [true, 'User authenticated successfully']
     } catch (error) {
-      console.error(error)
-      Object.assign(authError, { error: true, message: 'Something went wrong' })
+      if (error instanceof Error) {
+        authStatus.value = AuthStatus.UNAUTHENTICATED
+        return [false, error.message]
+      }
 
-      return false
-    } finally {
-      setTimeout(() => {
-        Object.assign(authError, { error: false, message: '' })
-      }, 2000)
+      console.error(error)
+      return [false, 'Something went wrong while loggin in user']
     }
   }
 
@@ -72,7 +69,6 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   return {
-    authError,
     login,
     checkAuthStatus,
     logout,
