@@ -11,7 +11,8 @@ export const adminRoutes: RouteRecordRaw = {
     {
       path: '',
       name: 'admin-dashboard',
-      component: () => import('../views/AdminDashboard.vue'),
+      redirect: { name: 'orders' },
+      // component: () => import('../views/AdminDashboard.vue'),
     },
   ],
 }
