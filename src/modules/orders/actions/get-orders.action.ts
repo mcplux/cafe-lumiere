@@ -7,6 +7,8 @@ import type { SearchFilters } from '../interfaces'
 import { isAxiosError } from 'axios'
 
 interface QueryParams {
+  limit: number
+  offset: number
   startDate: string
   endDate: string
   orderStatus: string[]
@@ -23,12 +25,17 @@ type GetOrdersResponse =
       msg: string
     }
 
+const LIMIT = isNaN(+import.meta.env.VITE_LIMIT) ? 50 : +import.meta.env.VITE_LIMIT
+
 export const getOrdersAction = async (
   startDate: Date,
   endDate: Date,
   searchFilters: SearchFilters,
+  page: number = 1,
 ): Promise<GetOrdersResponse | never> => {
   const params: QueryParams = {
+    limit: LIMIT,
+    offset: (page - 1) * LIMIT,
     startDate: formatLocalISOString(startDate),
     endDate: formatLocalISOString(endDate),
     orderStatus: [],
