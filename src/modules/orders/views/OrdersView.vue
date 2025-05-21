@@ -73,6 +73,14 @@ watch(
     <p v-if="ordersStore.noOrders" class="text-center mt-10 text-gray-700 text-lg">No orders yet</p>
 
     <div v-else>
+      <AppPagination
+        :current-page="+currentPage"
+        :total-pages="totalPages"
+        :limit="LIMIT"
+        :total-items="ordersStore.totalOrders"
+        @go-to-page="goToPage"
+      />
+
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 mt-10 gap-3">
         <OrderCard v-for="order in ordersStore.orders" :key="order.id" :order="order" />
       </div>
@@ -80,6 +88,8 @@ watch(
       <AppPagination
         :current-page="+currentPage"
         :total-pages="totalPages"
+        :limit="LIMIT"
+        :total-items="ordersStore.totalOrders"
         @go-to-page="goToPage"
       />
     </div>
