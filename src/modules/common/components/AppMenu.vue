@@ -7,7 +7,6 @@ import {
   ArrowRightStartOnRectangleIcon,
   Bars3Icon,
   BookOpenIcon,
-  ChartBarIcon,
   HomeIcon,
   ReceiptPercentIcon,
   Squares2X2Icon,
@@ -50,7 +49,7 @@ onMounted(async () => {
         <MenuItems
           class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
         >
-          <MenuItem v-slot="{ active }" v-if="authStore.isAdmin">
+          <!-- <MenuItem v-slot="{ active }" v-if="authStore.isAdmin">
             <RouterLink
               :class="[
                 active ? 'bg-orange-500 text-white' : 'text-gray-900',
@@ -61,7 +60,7 @@ onMounted(async () => {
               <ChartBarIcon class="size-4" />
               Dashboard
             </RouterLink>
-          </MenuItem>
+          </MenuItem> -->
 
           <MenuItem v-slot="{ active }">
             <RouterLink
