@@ -30,6 +30,8 @@ export const useOrdersStore = defineStore('orders', () => {
   const toast = useToast()
 
   const orders = ref<Order[]>([])
+  const totalOrders = ref(0)
+
   const order = reactive({ ...initialOrder })
   const orderItems = ref<Omit<OrderItem, 'id'>[]>([])
 
@@ -89,10 +91,10 @@ export const useOrdersStore = defineStore('orders', () => {
   }
 
   // Database actions
-  const getOrders = async (): Promise<[boolean, string]> => {
+  const getOrders = async (page: number = 1): Promise<[boolean, string]> => {
     orderReqStatus.value = OrderReqStatus.LOADING
     try {
-      const response = await getOrdersAction(dates.startDate, dates.endDate, searchFilters)
+      const response = await getOrdersAction(dates.startDate, dates.endDate, searchFilters, page)
       if (!response.ok) {
         orderReqStatus.value = OrderReqStatus.ERROR
         return [false, response.msg]
@@ -100,6 +102,7 @@ export const useOrdersStore = defineStore('orders', () => {
 
       orderReqStatus.value = OrderReqStatus.SUCCESS
       orders.value = response.orders
+      totalOrders.value = response.totalItems
       return [true, '']
     } catch (error) {
       if (error instanceof Error) {
@@ -224,6 +227,7 @@ export const useOrdersStore = defineStore('orders', () => {
 
   return {
     orders,
+    totalOrders,
     order,
     orderItems,
     dates,

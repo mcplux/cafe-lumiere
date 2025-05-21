@@ -1,10 +1,10 @@
+import { isAxiosError } from 'axios'
 import qs from 'qs'
 
 import cafeLumiereApi from '@/api/cafe-lumiere.api'
 import type { Order } from '../interfaces/order.interface'
 import { formatLocalISOString } from '@/modules/common/helpers'
 import type { SearchFilters } from '../interfaces'
-import { isAxiosError } from 'axios'
 
 interface QueryParams {
   limit: number
@@ -18,6 +18,7 @@ type GetOrdersResponse =
   | {
       ok: true
       orders: Order[]
+      totalItems: number
     }
   | {
       ok: false
@@ -58,14 +59,18 @@ export const getOrdersAction = async (
   }
 
   try {
-    const { data } = await cafeLumiereApi.get<Order[]>('/orders', {
+    const { data } = await cafeLumiereApi.get<{
+      orders: Order[]
+      totalItems: number
+    }>('/orders', {
       params,
       paramsSerializer: () => qs.stringify(params, { arrayFormat: 'repeat' }),
     })
 
     return {
       ok: true,
-      orders: data,
+      orders: data.orders,
+      totalItems: data.totalItems,
     }
   } catch (error) {
     if (isAxiosError(error) && error.status === 401) {
