@@ -5,7 +5,7 @@ import { isAuthenticatedGuard } from '@/modules/auth/guards/is-authenticated.gua
 export const orderRoutes: RouteRecordRaw = {
   path: '/orders',
   beforeEnter: [isAuthenticatedGuard],
-  component: () => import('../layouts/OrdersLayout.vue'),
+  component: () => import('@/modules/common/layouts/AppLayout.vue'),
   children: [
     {
       path: '',

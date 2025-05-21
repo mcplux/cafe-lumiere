@@ -84,7 +84,7 @@ onMounted(() => {
     <div class="mt-5" v-if="authStore.isAdmin">
       <h3 class="font-bold">Dates:</h3>
       <div class="flex flex-col gap-3 sm:flex-row justify-between mt-2">
-        <div class="flex flex-col w-1/2 gap-1">
+        <div class="flex flex-col w-full sm:w-1/2 gap-1">
           <label for="startDate">Start Date</label>
           <input
             type="date"
@@ -94,7 +94,7 @@ onMounted(() => {
             @change="handleChangeDate"
           />
         </div>
-        <div class="flex flex-col w-1/2 gap-1">
+        <div class="flex flex-col w-full sm:w-1/2 gap-1">
           <label for="endDate">End Date</label>
           <input
             type="date"

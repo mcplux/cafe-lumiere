@@ -1,12 +1,12 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-import PublicLayout from '../layouts/PublicLayout.vue'
+import AppLayout from '@/modules/common/layouts/AppLayout.vue'
 import HomeView from '../views/HomeView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 
 export const publicRoutes: RouteRecordRaw = {
   path: '/',
-  component: PublicLayout,
+  component: AppLayout,
   children: [
     {
       path: '',
