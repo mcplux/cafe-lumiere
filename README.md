@@ -1,45 +1,40 @@
-# cafe-lumiere
+# Café Lumière
 
-This template should help get you started developing with Vue 3 in Vite.
+# Run in development
 
-## Recommended IDE Setup
+1. Raise API: `https:github.com/mcplux/cafe-lumiere-api`
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+2. Clone the project
+```
+git clone https://github.com/github.com/mcplux/cafe-lumiere-api.git
+```
 
-## Type Support for `.vue` Imports in TS
+3. Install dependencies
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+4. Duplicate `.env.template` file as `.env`
 
-```sh
+```
+cp .env.template .env
+```
+
+5. Run application
+```
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Seed users
+- Admin
+  - email: test1@test.com
+  - password: Abc123
 
-```sh
-npm run build
-```
+- Waiter 1
+  - email: test2@test.com
+  - password: Abc123
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+- Waiter 2
+  - email: test3@test.com
+  - password: Abc123
