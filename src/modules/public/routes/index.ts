@@ -1,7 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 
 import AppLayout from '@/modules/common/layouts/AppLayout.vue'
-import HomeView from '../views/HomeView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
 
 export const publicRoutes: RouteRecordRaw = {
@@ -11,7 +10,8 @@ export const publicRoutes: RouteRecordRaw = {
     {
       path: '',
       name: 'home',
-      component: HomeView,
+      redirect: { name: 'menu' },
+      // component: HomeView,
     },
     {
       path: '/:pathMatch(.*)*',

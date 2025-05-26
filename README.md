@@ -2,11 +2,11 @@
 
 # Run in development
 
-1. Raise API: `https:github.com/mcplux/cafe-lumiere-api`
+1. Raise API: `https://github.com/mcplux/cafe-lumiere-api`
 
 2. Clone the project
 ```
-git clone https://github.com/github.com/mcplux/cafe-lumiere-api.git
+git clone https://github.com/mcplux/cafe-lumiere.git
 ```
 
 3. Install dependencies
